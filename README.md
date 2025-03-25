@@ -1,14 +1,13 @@
-# 999AD 1.0-pre-alpha - main branch 
+# 999AD - dev branch 
 ![Logo](Images/logo.png)
 
 "UWP-remake" of ITCH.io 999AD arcade (platformer?) game project.
 
 ## Screenshots
 ![W11](Images/sshot01.png)
-![W11](Images/sshot02.png)
 ![W11](Images/sshot03.png)
 ![W11](Images/sshot04.png)
-![W11](Images/sshot05.png)
+
 
 ## Status
 - UWP app
