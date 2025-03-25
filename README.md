@@ -27,7 +27,7 @@
 As is. No support. DIY. Learn purposes only.
 
 ## Reference(s)
-- https://ivanpalazzo.itch.io/999adOriginal project 
+- https://ivanpalazzo.itch.io/999AD Original project 
 
 ## ..
 [m][e] March 2025
