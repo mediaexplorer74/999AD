@@ -1,5 +1,4 @@
-﻿
-// Type: GameManager.Game1
+﻿// Type: GameManager.Game1
 // Assembly: 999AD, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 88FA0CA8-8FB6-4FB7-AA8C-8F78C65FFFD3
 // Modded by [M]edia[E]xplorer
@@ -9,6 +8,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using static GameManager.Game1;
 
 
 namespace GameManager
@@ -17,17 +17,31 @@ namespace GameManager
   {
     private GraphicsDeviceManager graphics;
     private SpriteBatch spriteBatch;
-    public static readonly int minViewportWidth = 384;
-    public static readonly int minViewportHeight = 216;
+
+    // For Screen autoresize deals
+    Vector2 baseScreenSize = new Vector2(640, 480);//Vector2(1280, 720);
+    private Matrix globalTransformation;
+    int backbufferWidth, backbufferHeight;
+
+
+    public static readonly int minViewportWidth = 640;//384;
+    public static readonly int minViewportHeight = 480;//216;
     public static int gameWidth;
     public static int gameHeight;
+
     public static Rectangle viewportRectangle;
     private static RenderTarget2D nativeRenderTarget;
     private static RenderTarget2D renderTarget_zoom1;
     private static RenderTarget2D renderTarger_zoom0dot5;
-    public static int scale;
+
+    public static /*int*/float scale = 1;
+    /*public float Scale = 1f;*/
+
+
     public static MouseState currentMouseState;
     public static MouseState previousMouseState;
+
+
     public static KeyboardState previousKeyboard;
     public static KeyboardState currentKeyboard;
     public static GamePadState previousGamePad;
@@ -40,37 +54,83 @@ namespace GameManager
     public Game1()
     {
       this.graphics = new GraphicsDeviceManager((Game) this);
-      this.Content.RootDirectory = "Content";
+
+#if WINDOWS_PHONE
+            TargetElapsedTime = TimeSpan.FromTicks(333333);
+#endif
+
+        graphics.IsFullScreen = true;
+
+        this.graphics.GraphicsProfile = GraphicsProfile.Reach;
+
+
+        IsMouseVisible = true;
+
+        Game1.gameWidth = this.graphics.PreferredBackBufferWidth;
+        Game1.gameHeight = this.graphics.PreferredBackBufferHeight;
+
+        graphics.SupportedOrientations =
+            DisplayOrientation.LandscapeRight
+                | DisplayOrientation.LandscapeLeft 
+                | DisplayOrientation.Portrait;
+
+
+        this.Content.RootDirectory = "Content";
     }
 
     protected override void Initialize()
     {
-      this.IsMouseVisible = true;
+      //this.IsMouseVisible = true;
+
       Game1.gameWidth = Game1.minViewportWidth;
       Game1.gameHeight = Game1.minViewportHeight;
-      Game1.scale = MathHelper.Min(this.GraphicsDevice.DisplayMode.Width / Game1.gameWidth, this.GraphicsDevice.DisplayMode.Height / Game1.gameHeight);
+
+
+      /*Game1.scale = 
+            MathHelper.Min(this.GraphicsDevice.DisplayMode.Width / Game1.gameWidth, 
+            this.GraphicsDevice.DisplayMode.Height / Game1.gameHeight);*/
+
       Game1.renderTarget_zoom1 = new RenderTarget2D(this.GraphicsDevice, Game1.gameWidth, Game1.gameHeight);
       Game1.renderTarger_zoom0dot5 = new RenderTarget2D(this.GraphicsDevice, Game1.gameWidth * 2, Game1.gameHeight * 2);
-      Game1.viewportRectangle = new Rectangle((this.GraphicsDevice.DisplayMode.Width - Game1.gameWidth * Game1.scale) / 2, (this.GraphicsDevice.DisplayMode.Height - Game1.gameHeight * Game1.scale) / 2, Game1.gameWidth * Game1.scale, Game1.gameHeight * Game1.scale);
+
+      Game1.viewportRectangle = new Rectangle(
+          (int)((this.GraphicsDevice.DisplayMode.Width - Game1.gameWidth * Game1.scale) / 2),
+          (int)((this.GraphicsDevice.DisplayMode.Height - Game1.gameHeight * Game1.scale) / 2),
+          (int)(Game1.gameWidth * Game1.scale), 
+          (int)(Game1.gameHeight * Game1.scale));
+
+
       this.graphics.PreferredBackBufferWidth = this.GraphicsDevice.DisplayMode.Width;
       this.graphics.PreferredBackBufferHeight = this.GraphicsDevice.DisplayMode.Height;
+
       this.graphics.IsFullScreen = false;//true;
+
       this.graphics.ApplyChanges();
+
       Game1.previousKeyboard = Keyboard.GetState();
       Game1.previousGamePad = GamePad.GetState(PlayerIndex.One);
       Game1.previousMouseState = Mouse.GetState();
+
       base.Initialize();
     }
 
     protected override void LoadContent()
     {
+      this.Content.RootDirectory = "Content";
       this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
-      Game1.currentGameState = Game1.GameStates.titleScreen;
+
+      ScalePresentationArea();
+
+      Game1.currentGameState = Game1.GameStates.loadGame;//.titleScreen;
+
       LoadSaveManager.Inizialize();
       GameStats.Inizialize();
+
       Achievements.Initialize(this.Content.Load<SpriteFont>("fonts\\monologue"),
           this.Content.Load<SpriteFont>("fonts\\LiberationMono12"));
+
       MapsManager.Inizialize(this.Content.Load<Texture2D>("tiles"));
+
       CameraManager.Inizialize(new Texture2D[18]
       {
         this.Content.Load<Texture2D>("backgrounds\\tutorial0"),
@@ -92,6 +152,7 @@ namespace GameManager
         this.Content.Load<Texture2D>("backgrounds\\escape1"),
         this.Content.Load<Texture2D>("backgrounds\\escape2")
       });
+
       PlatformsManager.Inizialize(this.Content.Load<Texture2D>("platforms"));
       ProjectilesManager.Inizialize(this.Content.Load<Texture2D>("animatedSprites"));
       Player.Inizialize(this.Content.Load<Texture2D>("characters\\player"), new Vector2(16f, 185f));
@@ -102,6 +163,7 @@ namespace GameManager
       EnemyManager.Initialise(this.Content.Load<Texture2D>("characters\\enemy1"), 
           this.Content.Load<Texture2D>("characters\\enemy2"));
       MidBoss.Initialise(this.Content.Load<Texture2D>("characters\\midboss"));
+
       FinalBoss.Inizialize(this.Content.Load<Texture2D>("characters\\finalBoss"), new Texture2D[4]
       {
         this.Content.Load<Texture2D>("characters\\stoneWing"),
@@ -109,14 +171,19 @@ namespace GameManager
         this.Content.Load<Texture2D>("characters\\damagedWing"),
         this.Content.Load<Texture2D>("characters\\deadWing")
       });
+
       CollectablesManager.Inizialize(this.Content.Load<Texture2D>("animatedSprites"));
+
       MonologuesManager.Inizialize(this.Content.Load<Texture2D>("animatedSprites"),
           this.Content.Load<SpriteFont>("fonts\\monologue"));
+
       DoorsManager.Inizialize(this.Content.Load<Texture2D>("animatedSprites"));
       AnimatedSpritesManager.Inizialize(this.Content.Load<Texture2D>("animatedSprites"));
       TorchManager.Initialize(this.Content.Load<Texture2D>("firePot"));
+
       PlayerDeathManager.Initialize(this.Content.Load<Texture2D>("menus\\deathScreen"),
           this.Content.Load<Texture2D>("menus\\menuOptions"));
+
       MenusManager.Initialize(this.Content.Load<Texture2D>("menus\\menuOptions"), new Texture2D[8]
       {
         this.Content.Load<Texture2D>("menus\\titleScreen"),
@@ -128,12 +195,20 @@ namespace GameManager
         this.Content.Load<Texture2D>("menus\\wallJump"),
         this.Content.Load<Texture2D>("menus\\achievements")
       });
+
       CutscenesManager.Initialize(this.Content.Load<Texture2D>("characters\\enemy1"), 
           this.Content.Load<Texture2D>("characters\\player"), this.Content.Load<SpriteFont>("fonts\\monologue"));
+
       SoundEffects.Initialise(this.Content.Load<SoundEffect>("sounds\\pJump"),
           this.Content.Load<SoundEffect>("sounds\\pShoot"),
           this.Content.Load<SoundEffect>("sounds\\pHurt"), this.Content.Load<SoundEffect>("sounds\\pickup"),
-          this.Content.Load<SoundEffect>("sounds\\enemyAttack"), this.Content.Load<SoundEffect>("sounds\\enemyHurt"), this.Content.Load<SoundEffect>("sounds\\e2Attack"), this.Content.Load<SoundEffect>("sounds\\midMove"), this.Content.Load<SoundEffect>("sounds\\midAttack"), this.Content.Load<SoundEffect>("sounds\\midHurt"), this.Content.Load<SoundEffect>("sounds\\finAttack"), this.Content.Load<SoundEffect>("sounds\\finHurt"), this.Content.Load<SoundEffect>("sounds\\finAwaken"), this.Content.Load<SoundEffect>("sounds\\finRecover"), this.Content.Load<Song>("sounds\\finalBossMusic"));
+          this.Content.Load<SoundEffect>("sounds\\enemyAttack"), this.Content.Load<SoundEffect>("sounds\\enemyHurt"),
+          this.Content.Load<SoundEffect>("sounds\\e2Attack"), this.Content.Load<SoundEffect>("sounds\\midMove"), 
+          this.Content.Load<SoundEffect>("sounds\\midAttack"), this.Content.Load<SoundEffect>("sounds\\midHurt"), 
+          this.Content.Load<SoundEffect>("sounds\\finAttack"), this.Content.Load<SoundEffect>("sounds\\finHurt"),
+          this.Content.Load<SoundEffect>("sounds\\finAwaken"), this.Content.Load<SoundEffect>("sounds\\finRecover"), 
+          this.Content.Load<Song>("sounds\\finalBossMusic"));
+
       this.gameInitialized = true;
       Game1.Zoom1();
     }
@@ -142,10 +217,32 @@ namespace GameManager
     {
     }
 
+    // ScalePresentationArea - scale our graphics :)
+    public void ScalePresentationArea()
+    {
+        //Work out how much we need to scale our graphics to fill the screen
+        backbufferWidth = GraphicsDevice.PresentationParameters.BackBufferWidth - 0; // 40 
+        backbufferHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+        float horScaling = backbufferWidth / baseScreenSize.X;
+        float verScaling = backbufferHeight / baseScreenSize.Y;
+        //float 
+        scale = (horScaling + verScaling) / 2;
+
+        //TODO: figure out how to scale 
+        Vector3 screenScalingFactor = new Vector3(horScaling, verScaling, 1);
+
+        globalTransformation = Matrix.CreateScale(screenScalingFactor);
+
+        System.Diagnostics.Debug.WriteLine("Screen Size - Width["
+            + GraphicsDevice.PresentationParameters.BackBufferWidth + "] " +
+            "Height [" + GraphicsDevice.PresentationParameters.BackBufferHeight + "]");
+    }
+
     public static void Zoom0Dot5()
     {
-      Game1.gameWidth = Game1.minViewportWidth * 2;
-      Game1.gameHeight = Game1.minViewportHeight * 2;
+      Game1.gameWidth = (int)(Game1.minViewportWidth * 1.2f/*2*/);
+      Game1.gameHeight = (int)(Game1.minViewportHeight * 1.2f/*2*/);
       Game1.nativeRenderTarget = Game1.renderTarger_zoom0dot5;
       CameraManager.SwitchCamera(RoomsManager.CurrentRoom);
     }
@@ -160,9 +257,23 @@ namespace GameManager
 
     protected override void Update(GameTime gameTime)
     {
-      if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
-                || Keyboard.GetState().IsKeyDown(Keys.Escape))
-        this.Exit();
+
+        // *********************************
+        //Confirm the screen has not been resized by the user
+        if
+        (
+            backbufferHeight != GraphicsDevice.PresentationParameters.BackBufferHeight ||
+            backbufferWidth != GraphicsDevice.PresentationParameters.BackBufferWidth
+        )
+        {
+            ScalePresentationArea();
+        }
+        // *********************************
+
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+            || Keyboard.GetState().IsKeyDown(Keys.Escape))
+      this.Exit();
+
       Game1.currentKeyboard = Keyboard.GetState();
       Game1.currentGamePad = GamePad.GetState(PlayerIndex.One);
       Game1.currentMouseState = Mouse.GetState();
@@ -175,7 +286,9 @@ namespace GameManager
           MenusManager.menus[0].Update();
           break;
         case Game1.GameStates.loadGame:
-          Game1.currentGameState = !LoadSaveManager.LoadGame() ? Game1.GameStates.titleScreen : Game1.GameStates.playing;
+          Game1.currentGameState = !LoadSaveManager.LoadGame()
+                ? Game1.GameStates.titleScreen 
+                : Game1.GameStates.playing;
           break;
         case Game1.GameStates.controls:
           MenusManager.menus[1].Update();
@@ -212,7 +325,10 @@ namespace GameManager
           CollectablesManager.Update(totalSeconds);
           break;
         case Game1.GameStates.pause:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.P) && !Game1.previousKeyboard.IsKeyDown(Keys.P) || Game1.currentKeyboard.IsKeyDown(Keys.M) && !Game1.previousKeyboard.IsKeyDown(Keys.M) || Game1.currentGamePad.Buttons.Start == ButtonState.Pressed && Game1.previousGamePad.Buttons.Start == ButtonState.Released)
+          if (Game1.currentKeyboard.IsKeyDown(Keys.P) && !Game1.previousKeyboard.IsKeyDown(Keys.P) 
+                        || Game1.currentKeyboard.IsKeyDown(Keys.M) && !Game1.previousKeyboard.IsKeyDown(Keys.M)
+                        || Game1.currentGamePad.Buttons.Start == ButtonState.Pressed
+                        && Game1.previousGamePad.Buttons.Start == ButtonState.Released)
           {
             MenusManager.menus[4].Reset();
             Game1.currentGameState = Game1.GameStates.playing;
@@ -227,7 +343,10 @@ namespace GameManager
         case Game1.GameStates.ending:
           if (!CutscenesManager.cutscenes[1].active)
           {
-            LoadSaveManager.SaveHighScores(new AchievementsSaveData(true, GameStats.deathsCount == 0 || Achievements.noDeath, GameStats.hitsCount == 0 || Achievements.noHits, (double) GameStats.gameTime < (double) Achievements.bestTime || (double) Achievements.bestTime == 0.0 ? GameStats.gameTime : Achievements.bestTime));
+            LoadSaveManager.SaveHighScores(new AchievementsSaveData(true, GameStats.deathsCount == 0 
+                || Achievements.noDeath, GameStats.hitsCount == 0 
+                || Achievements.noHits, (double) GameStats.gameTime < (double) Achievements.bestTime 
+                || (double) Achievements.bestTime == 0.0 ? GameStats.gameTime : Achievements.bestTime));
             LoadSaveManager.DeleteSaveFile();
             Game1.currentGameState = Game1.GameStates.achievements;
             this.gameInitialized = false;
@@ -260,7 +379,9 @@ namespace GameManager
 
     protected override void Draw(GameTime gameTime)
     {
-      this.spriteBatch.Begin();
+      //this.spriteBatch.Begin();
+      spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, globalTransformation);
+      
       switch (Game1.currentGameState)
       {
         case Game1.GameStates.titleScreen:

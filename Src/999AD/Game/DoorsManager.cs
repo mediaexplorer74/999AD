@@ -68,10 +68,13 @@ namespace GameManager
         new DoorsRoomManager(new Door[0]),
         new DoorsRoomManager(new Door[0])
       };
+
       for (int room = 0; room < 18; ++room)
       {
         foreach (Door door in DoorsManager.doorsRoomManagers[room].doors)
-          door.LockDoor((RoomsManager.Rooms) room);
+        {
+            door.LockDoor((RoomsManager.Rooms)room);
+        }
       }
     }
   }
