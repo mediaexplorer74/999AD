@@ -20,7 +20,7 @@
 - Fix load objects bug
 - Fix Save game data / load game data
 - Fix screen scaling problem
-- Fix input mechanics (mous / touchpanel support) 
+- Fix input mechanics (mouse / touchpanel support) 
 - Add some cool music theme
 
 ## .
