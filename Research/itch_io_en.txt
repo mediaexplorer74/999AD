@@ -1,0 +1,47 @@
+999 A.D.
+A downloadable game for Windows
+
+Назовите вашу цену
+The team
+Dale McAuliffe: Lead Artist
+Ivan Palazzo: Lead Programmer, Level Designer
+Jules Rodrigues: Programmer, Soundman
+Justinas Baskys: GUI programmer
+Alexander Hapgood: Narrative Designer
+
+Special thanks to Mehmet Durmus for contributing to the initial design phase.
+
+Overview of the game
+This game was made as part of the Game Development Group Project 1 module at the University of Westminster.
+
+The idea for the game stems from the superstition according to which the world would end in the year 1000. The main character, a fallen night, is sent on a quest to defeat the demonic creatures plotting to take over the world at the start of the second millennium.
+
+The genre of 999 A.D. is side scroller metroidvania. The world map consists of eighteen interconnected sections that become accessible as the player collects keys and power-ups (double jump and wall jump). The player can also attack enemies by throwing drops of holy water, which move following a projectile trajectory.
+
+The final boss fight is driven by a simple A.I. that randomly selects the next attack pattern, making it more challenging as the boss's health decreases.
+
+In the last part of the game, the player has to escape from a collapsing underground cave. This level features a series of carefully timed triggers, which control events like platforms falling down or lava geysers shooting up.
+
+999 A.D. features an automatic save system, which records the progress at each screen transition as well as the best time for completing the game and the achievements completed.
+
+Additional info
+Developed with Monogame 3.6
+Supported platforms: Windows PCs
+Requires .NET Framework 4.5 or above
+
+Больше информации
+Обновлено	 Jan 22, 2021
+Опубликовано	 Oct 09, 2020
+Состояние	Released
+Платформы	Windows
+Рейтинг	
+Rated 4.5 out of 5 stars
+(2total ratings)
+Автор	Ivan Palazzo
+Жанр	Platformer, Adventure
+Создано при помощи	Aseprite, MonoGame, Adobe Photoshop
+Метки	2D, Medieval, Metroidvania, Mystery, mythology, Nonlinear, Pixel Art, Singleplayer, Tilemap
+Средний сеанс	About a half-hour
+Языки	English
+Устройства управления	Keyboard, Xbox controller
+Специальные возможности	Subtitles

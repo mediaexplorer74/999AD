@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C0E33704-ABFD-4446-B2F9-52B42D55B173}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>System.Runtime.Serialization.Formatters</RootNamespace>
+    <AssemblyName>System.Runtime.Serialization.Formatters</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
+    <PlatformTarget>ARM64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
+    <PlatformTarget>ARM64</PlatformTarget>
+    <OutputPath>bin\ARM64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Binder.cs" />
+    <Compile Include="DeserializationEventHandler.cs" />
+    <Compile Include="FixupHolder.cs" />
+    <Compile Include="FixupHolderList.cs" />
+    <Compile Include="Formatter.cs" />
+    <Compile Include="FormatterConverter.cs" />
+    <Compile Include="FormatterServices.cs" />
+    <Compile Include="Formatters\Binary\BinaryArray.cs" />
+    <Compile Include="Formatters\Binary\BinaryArrayTypeEnum.cs" />
+    <Compile Include="Formatters\Binary\BinaryAssembly.cs" />
+    <Compile Include="Formatters\Binary\BinaryAssemblyInfo.cs" />
+    <Compile Include="Formatters\Binary\BinaryCrossAppDomainAssembly.cs" />
+    <Compile Include="Formatters\Binary\BinaryCrossAppDomainMap.cs" />
+    <Compile Include="Formatters\Binary\BinaryCrossAppDomainString.cs" />
+    <Compile Include="Formatters\Binary\BinaryFormatter.cs" />
+    <Compile Include="Formatters\Binary\BinaryFormatterWriter.cs" />
+    <Compile Include="Formatters\Binary\BinaryHeaderEnum.cs" />
+    <Compile Include="Formatters\Binary\BinaryObject.cs" />
+    <Compile Include="Formatters\Binary\BinaryObjectString.cs" />
+    <Compile Include="Formatters\Binary\BinaryObjectWithMap.cs" />
+    <Compile Include="Formatters\Binary\BinaryObjectWithMapTyped.cs" />
+    <Compile Include="Formatters\Binary\BinaryParser.cs" />
+    <Compile Include="Formatters\Binary\BinaryTypeConverter.cs" />
+    <Compile Include="Formatters\Binary\BinaryTypeEnum.cs" />
+    <Compile Include="Formatters\Binary\Converter.cs" />
+    <Compile Include="Formatters\Binary\ICloneable.cs" />
+    <Compile Include="Formatters\Binary\InternalArrayTypeE.cs" />
+    <Compile Include="Formatters\Binary\InternalFE.cs" />
+    <Compile Include="Formatters\Binary\InternalMemberTypeE.cs" />
+    <Compile Include="Formatters\Binary\InternalMemberValueE.cs" />
+    <Compile Include="Formatters\Binary\InternalNameSpaceE.cs" />
+    <Compile Include="Formatters\Binary\InternalObjectPositionE.cs" />
+    <Compile Include="Formatters\Binary\InternalObjectTypeE.cs" />
+    <Compile Include="Formatters\Binary\InternalParseTypeE.cs" />
+    <Compile Include="Formatters\Binary\InternalPrimitiveTypeE.cs" />
+    <Compile Include="Formatters\Binary\InternalSerializerTypeE.cs" />
+    <Compile Include="Formatters\Binary\IntSizedArray.cs" />
+    <Compile Include="Formatters\Binary\IObjectReference.cs" />
+    <Compile Include="Formatters\Binary\IStreamable.cs" />
+    <Compile Include="Formatters\Binary\MemberPrimitiveTyped.cs" />
+    <Compile Include="Formatters\Binary\MemberPrimitiveUnTyped.cs" />
+    <Compile Include="Formatters\Binary\MemberReference.cs" />
+    <Compile Include="Formatters\Binary\MessageEnd.cs" />
+    <Compile Include="Formatters\Binary\NameCache.cs" />
+    <Compile Include="Formatters\Binary\NameInfo.cs" />
+    <Compile Include="Formatters\Binary\ObjectMap.cs" />
+    <Compile Include="Formatters\Binary\ObjectNull.cs" />
+    <Compile Include="Formatters\Binary\ObjectProgress.cs" />
+    <Compile Include="Formatters\Binary\ObjectReader.cs" />
+    <Compile Include="Formatters\Binary\ObjectWriter.cs" />
+    <Compile Include="Formatters\Binary\OptionalFieldAttribute.cs" />
+    <Compile Include="Formatters\Binary\ParseRecord.cs" />
+    <Compile Include="Formatters\Binary\PrimitiveArray.cs" />
+    <Compile Include="Formatters\Binary\ReadObjectInfo.cs" />
+    <Compile Include="Formatters\Binary\SerializationHeaderRecord.cs" />
+    <Compile Include="Formatters\Binary\SerializationInfo.cs" />
+    <Compile Include="Formatters\Binary\SerializationInfoEnumerator.cs" />
+    <Compile Include="Formatters\Binary\SerObjectInfoCache.cs" />
+    <Compile Include="Formatters\Binary\SerObjectInfoInit.cs" />
+    <Compile Include="Formatters\Binary\SerStack.cs" />
+    <Compile Include="Formatters\Binary\SizedArray.cs" />
+    <Compile Include="Formatters\Binary\TypeInformation.cs" />
+    <Compile Include="Formatters\Binary\ValueFixup.cs" />
+    <Compile Include="Formatters\Binary\ValueFixupEnum.cs" />
+    <Compile Include="Formatters\Binary\WriteObjectInfo.cs" />
+    <Compile Include="Formatters\FormatterAssemblyStyle.cs" />
+    <Compile Include="Formatters\FormatterTypeStyle.cs" />
+    <Compile Include="Formatters\IFieldInfo.cs" />
+    <Compile Include="Formatters\TypeFilterLevel.cs" />
+    <Compile Include="FxResources\System\Runtime\Serialization\Formatters\SR.cs" />
+    <Compile Include="FxResources\System\Runtime\Serialization\Formatters\SR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="IDeserializationCallback.cs" />
+    <Compile Include="IFormatter.cs" />
+    <Compile Include="IFormatterConverter.cs" />
+    <Compile Include="ISerializable.cs" />
+    <Compile Include="ISerializationSurrogate.cs" />
+    <Compile Include="ISurrogateSelector.cs" />
+    <Compile Include="LongList.cs" />
+    <Compile Include="MarshalByRefObject.cs" />
+    <Compile Include="MemberHolder.cs" />
+    <Compile Include="NonSerializedAttribute.cs" />
+    <Compile Include="ObjectHolder.cs" />
+    <Compile Include="ObjectHolderList.cs" />
+    <Compile Include="ObjectHolderListEnumerator.cs" />
+    <Compile Include="ObjectIDGenerator.cs" />
+    <Compile Include="ObjectManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializationBinder.cs" />
+    <Compile Include="SerializationEventHandler.cs" />
+    <Compile Include="SerializationEvents.cs" />
+    <Compile Include="SerializationEventsCache.cs" />
+    <Compile Include="SerializationFieldInfo.cs" />
+    <Compile Include="SerializationInfoExtensions.cs" />
+    <Compile Include="SerializationObjectManager.cs" />
+    <Compile Include="StreamingContextStates.cs" />
+    <Compile Include="SurrogateForCyclicalReference.cs" />
+    <Compile Include="SurrogateHashtable.cs" />
+    <Compile Include="SurrogateKey.cs" />
+    <Compile Include="SurrogateSelector.cs" />
+    <Compile Include="System\Runtime\CompilerServices\__BlockReflectionAttribute.cs" />
+    <Compile Include="System\SR.cs" />
+    <Compile Include="TypedReference.cs" />
+    <Compile Include="TypeLoadExceptionHolder.cs" />
+    <Compile Include="ValueTypeFixupInfo.cs" />
+    <EmbeddedResource Include="FxResources\System\Runtime\Serialization\Formatters\SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+      <DependentUpon>SR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\System.Runtime.Serialization.Formatters.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.2.14</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Formatters\Resources\System\Runtime\Serialization\Formatters\rd.xml" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
