@@ -72,7 +72,7 @@ namespace GameManager
       GameEvents.Reset();
 
       // RnD: current room reset (hack)
-      RoomsManager.CurrentRoom = RoomsManager.Rooms.churchBellTower0;
+      //RoomsManager.CurrentRoom = RoomsManager.Rooms.churchBellTower0;
 
       switch (RoomsManager.CurrentRoom)
       {
