@@ -64,9 +64,7 @@ namespace GameManager
           {
             for (int index = 0; index < this.totalNumberOfOptions; ++index)
             {
-              if (this.positionOnScreen_options[index].Contains
-                             (new Point((int)((Game1.currentMouseState.X - Game1.viewportRectangle.X) / /*Game1.scale*/1),
-                             (int)((Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / /*Game1.scale*/1))))
+              if (this.positionOnScreen_options[index].Contains(new Point((Game1.currentMouseState.X - Game1.viewportRectangle.X) / Game1.scale, (Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / Game1.scale)))
                 this.currentOption = index;
             }
             goto label_14;
@@ -90,14 +88,9 @@ label_14:
           if (buttons.A == ButtonState.Released)
             goto label_17;
         }
-        if (Game1.currentMouseState.LeftButton == ButtonState.Pressed 
-                    && Game1.previousMouseState.LeftButton == ButtonState.Released)
+        if (Game1.currentMouseState.LeftButton == ButtonState.Pressed && Game1.previousMouseState.LeftButton == ButtonState.Released)
         {
-          if (!this.positionOnScreen_options[this.currentOption].Contains(new Point
-              (
-                  (int)( (Game1.currentMouseState.X - Game1.viewportRectangle.X) / /*Game1.scale*/1), 
-                  (int)( (Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / /*Game1.scale*/1) 
-              )))
+          if (!this.positionOnScreen_options[this.currentOption].Contains(new Point((Game1.currentMouseState.X - Game1.viewportRectangle.X) / Game1.scale, (Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / Game1.scale)))
             return;
           Game1.currentGameState = this.followingGameState[this.currentOption];
           this.currentOption = 0;

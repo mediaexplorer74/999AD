@@ -23,20 +23,21 @@ namespace GameManager
     public static readonly int width = 12;
     private static Vector2 jumpSpeed;
     private static bool isFacingRight;
-    public static readonly float maxHorizontalMovementSpeed = 100f;
+    public static readonly float maxHorizontalMovementSpeed = 300f;//100f;
     public static float horizontalMovementSpeed;
-    public static readonly Vector2 initialJumpSpeed = new Vector2(190f, -400f);
+    public static readonly Vector2 initialJumpSpeed = new Vector2(190f * 3, -400f * 3);//(190f, -400f);
     private static bool isTouchingTheGround;
     private static bool isOnTheWall;
     private static bool isOnMovingPlatform;
-    private static bool canDoubleJump;
-    private static bool isWallJumping;
-    public static bool doubleJumpUnlocked;
-    public static bool wallJumpUnlocked;
+    private static bool canDoubleJump = true; // hack
+    private static bool isWallJumping = true; //hack
+    public static bool doubleJumpUnlocked = true; //hack
+    public static bool wallJumpUnlocked = true; // hack
+
     public static readonly Vector2 projectileInitialVelocity = new Vector2(200f, -200f);
     public static readonly float timeBetweenShots = 0.4f;
     private static float elapsedShotTime;
-    public static readonly int maxHealthPoints = 3;
+    public static readonly int maxHealthPoints = 5;//3;
     public static int healthPoints;
     private static readonly float invulnerabilityTime = 3f;
     private static float elapsedInvulnerabilityTime;
@@ -70,7 +71,7 @@ namespace GameManager
       Player.isOnTheWall = false;
       Player.isOnMovingPlatform = false;
       Player.canDoubleJump = true;
-      Player.isWallJumping = false;
+      Player.isWallJumping = true;//false; // hack
       Player.elapsedShotTime = 0.0f;
       Player.healthPoints = Player.maxHealthPoints;
       Player.elapsedInvulnerabilityTime = 0.0f;
@@ -102,7 +103,8 @@ namespace GameManager
     {
       get
       {
-        return new Vector2((Player.isFacingRight ? Player.projectileInitialVelocity.X : -Player.projectileInitialVelocity.X) + Player.jumpSpeed.X, Player.projectileInitialVelocity.Y + 0.5f * Player.jumpSpeed.Y);
+        return new Vector2((Player.isFacingRight ? Player.projectileInitialVelocity.X : -Player.projectileInitialVelocity.X) 
+            + Player.jumpSpeed.X, Player.projectileInitialVelocity.Y + 0.5f * Player.jumpSpeed.Y);
       }
     }
 
@@ -177,9 +179,16 @@ namespace GameManager
     {
       if ((double) Player.elapsedShotTime > (double) Player.timeBetweenShots)
       {
-        if ((!Game1.currentKeyboard.IsKeyDown(Keys.Space) || Game1.previousKeyboard.IsKeyDown(Keys.Space)) && (Game1.currentGamePad.Buttons.X != ButtonState.Pressed || Game1.previousGamePad.Buttons.X != ButtonState.Released) || Player.isOnTheWall)
+        if ((!Game1.currentKeyboard.IsKeyDown(Keys.Space) 
+                    || Game1.previousKeyboard.IsKeyDown(Keys.Space)) 
+                    && (Game1.currentGamePad.Buttons.X != ButtonState.Pressed 
+                    || Game1.previousGamePad.Buttons.X != ButtonState.Released) || Player.isOnTheWall)
           return;
-        ProjectilesManager.ShootPlayerProjectile(Player.isFacingRight ? Player.position + new Vector2((float) Player.width, 0.0f) : Player.position, Player.ProjectileInitialVelocity);
+
+        ProjectilesManager.ShootPlayerProjectile(Player.isFacingRight 
+            ? Player.position + new Vector2((float) Player.width, 0.0f) 
+            : Player.position, Player.ProjectileInitialVelocity);
+
         Player.elapsedShotTime = 0.0f;
         SoundEffects.PlayerAttack.Play();
         if (Player.currentAnimation == Player.AnimationTypes.die)
@@ -206,8 +215,10 @@ namespace GameManager
       }
       if (Player.isTouchingTheGround)
       {
-        if (Player.currentAnimation != Player.AnimationTypes.die && Player.currentAnimation != Player.AnimationTypes.attack)
+        if (Player.currentAnimation != Player.AnimationTypes.die 
+             && Player.currentAnimation != Player.AnimationTypes.attack)
           Player.currentAnimation = Player.AnimationTypes.jump;
+
         Player.jumpSpeed.Y = Player.initialJumpSpeed.Y;
         SoundEffects.PlayerJump.Play();
         if (!Game1.currentKeyboard.IsKeyDown(Keys.Right) && !Game1.currentKeyboard.IsKeyDown(Keys.D))
@@ -244,9 +255,10 @@ label_14:
         if (Player.currentAnimation != Player.AnimationTypes.die 
                     && Player.currentAnimation != Player.AnimationTypes.attack)
           Player.currentAnimation = Player.AnimationTypes.jump;
+
         Player.jumpSpeed.Y = Player.initialJumpSpeed.Y;
         SoundEffects.PlayerJump.Play();
-        Player.canDoubleJump = false;
+        Player.canDoubleJump = true;//false;
         Player.isOnTheWall = false;
         Player.isWallJumping = true;
         Player.jumpSpeed.X = Player.isFacingRight ? -Player.initialJumpSpeed.X : Player.initialJumpSpeed.X;
@@ -254,8 +266,10 @@ label_14:
       }
       else if (Player.canDoubleJump && Player.doubleJumpUnlocked && !Player.isOnTheWall)
       {
-        if (Player.currentAnimation != Player.AnimationTypes.die && Player.currentAnimation != Player.AnimationTypes.attack)
+        if (Player.currentAnimation != Player.AnimationTypes.die 
+                    && Player.currentAnimation != Player.AnimationTypes.attack)
           Player.currentAnimation = Player.AnimationTypes.jump;
+
         Player.jumpSpeed.Y = Player.initialJumpSpeed.Y;
         SoundEffects.PlayerJump.Play();
         Player.canDoubleJump = false;
@@ -275,7 +289,9 @@ label_23:
         }
       }
       Player.horizontalMovementSpeed += Player.maxHorizontalMovementSpeed;
-      if (Player.currentAnimation != Player.AnimationTypes.die && Player.currentAnimation != Player.AnimationTypes.attack && Player.isTouchingTheGround)
+
+      if ( Player.currentAnimation != Player.AnimationTypes.die 
+                && Player.currentAnimation != Player.AnimationTypes.attack && Player.isTouchingTheGround )
         Player.currentAnimation = Player.AnimationTypes.walk;
 label_28:
       if (!Game1.currentKeyboard.IsKeyDown(Keys.Left) && !Game1.currentKeyboard.IsKeyDown(Keys.A))
@@ -289,17 +305,21 @@ label_28:
         }
       }
       Player.horizontalMovementSpeed -= Player.maxHorizontalMovementSpeed;
-      if (Player.currentAnimation != Player.AnimationTypes.die && Player.currentAnimation != Player.AnimationTypes.attack && Player.isTouchingTheGround)
+      if (Player.currentAnimation != Player.AnimationTypes.die 
+                && Player.currentAnimation != Player.AnimationTypes.attack && Player.isTouchingTheGround)
         Player.currentAnimation = Player.AnimationTypes.walk;
+
 label_33:
-      if (Player.isTouchingTheGround && (double) Player.horizontalMovementSpeed == 0.0 && Player.currentAnimation != Player.AnimationTypes.die && Player.currentAnimation != Player.AnimationTypes.attack)
+      if (Player.isTouchingTheGround && (double) Player.horizontalMovementSpeed == 0.0 
+                && Player.currentAnimation != Player.AnimationTypes.die 
+                && Player.currentAnimation != Player.AnimationTypes.attack)
       {
         Player.currentAnimation = Player.AnimationTypes.idle;
       }
       else
       {
         if (Player.isTouchingTheGround || !Player.isOnTheWall
-                    || Player.currentAnimation == Player.AnimationTypes.die)
+             || Player.currentAnimation == Player.AnimationTypes.die)
           return;
         Player.currentAnimation = Player.AnimationTypes.wall;
       }
@@ -332,7 +352,9 @@ label_33:
           }
         }
       }
-      if (Player.isWallJumping)
+
+      //RnD: Experimental
+      if (true)//(Player.isWallJumping)
       {
         if ((double) Math.Abs(Player.jumpSpeed.X) > (double) Player.maxHorizontalMovementSpeed)
           vector2.X = Player.jumpSpeed.X;
@@ -544,7 +566,10 @@ label_33:
     {
       if (Player.invulnerable && !damageEvenIfInvulnerable || Player.healthPoints <= 0)
         return;
-      Player.healthPoints -= damage;
+
+      // Hack
+      //Player.healthPoints -= damage; // decrease lifes life count
+
       SoundEffects.PlayerHurt.Play();
       ++GameStats.hitsCount;
       if (Player.healthPoints <= 0)
@@ -582,7 +607,9 @@ label_33:
     public static void DrawGUI(SpriteBatch spriteBatch)
     {
       for (int index = 0; index < Player.healthPoints; ++index)
-        spriteBatch.Draw(Collectable.Sprites, new Vector2((float) (5 + index * 16), 5f), new Rectangle?(new Rectangle(0, 110, 16, 19)), Color.White);
+        spriteBatch.Draw(Collectable.Sprites,
+            new Vector2((float) (5 + index * 16), 5f),
+            new Rectangle?(new Rectangle(0, 110, 16, 19)), Color.White);
     }
 
     private enum AnimationTypes

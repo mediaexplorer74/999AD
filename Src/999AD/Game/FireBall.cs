@@ -16,7 +16,9 @@ namespace GameManager
     private static Texture2D spritesheet;
     public static readonly int size = 10;
     public static readonly float radialShootingVelocity = 400f;
-    public static readonly float shotLifeTime = 3f;
+
+    public static readonly float shotLifeTime = 4f;//3f;
+    
     private Vector2 rotationCenter;
     private Animation animation;
     private float radialDistance;

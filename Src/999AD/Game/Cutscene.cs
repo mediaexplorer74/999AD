@@ -61,7 +61,7 @@ namespace GameManager
       }
       else if (this.endOfSentence)
       {
-        /*if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter) || Game1.previousKeyboard.IsKeyDown(Keys.Enter))
+        if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter) || Game1.previousKeyboard.IsKeyDown(Keys.Enter))
         {
           GamePadButtons buttons = Game1.currentGamePad.Buttons;
           if (buttons.A != ButtonState.Pressed)
@@ -70,10 +70,9 @@ namespace GameManager
           if (buttons.A != ButtonState.Released)
             return;
         }
-        this.endOfSentence = false;*/
+        this.endOfSentence = false;
         ++this.currentSentence;
         this.currentLength = 0;
-     
       }
       else
       {
@@ -81,17 +80,7 @@ namespace GameManager
         if ((double) this.elapsedTimeBetweenChars < (double) Cutscene.timeBetweenChars)
           return;
         ++this.currentLength;
-
-        string sentence = "";
-
-        try
-        { 
-            sentence = this.sentences[this.currentSentence].Substring(0, this.currentLength);
-        }
-        catch { }
-
-        this.stringDisplayed = sentence;
-        
+        this.stringDisplayed = this.sentences[this.currentSentence].Substring(0, this.currentLength);
         this.elapsedTimeBetweenChars = 0.0f;
         if (this.currentLength != this.sentences[this.currentSentence].Length)
           return;
@@ -105,8 +94,7 @@ namespace GameManager
 
     public void Draw(SpriteBatch spriteBatch)
     {
-      spriteBatch.Draw(this.animationSpritesheet, 
-          this.animationPosition, new Rectangle?(this.animation.Frame), Color.White);
+      spriteBatch.Draw(this.animationSpritesheet, this.animationPosition, new Rectangle?(this.animation.Frame), Color.White);
       spriteBatch.DrawString(Cutscene.spriteFont, this.stringDisplayed, this.stringPosition, Color.White);
     }
   }

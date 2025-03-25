@@ -1,18 +1,20 @@
-# 999AD - dev branch 
+# 999AD 1.0-pre-alpha - dev branch 
 ![Logo](Images/logo.png)
 
 "UWP-remake" of ITCH.io 999AD arcade (platformer?) game project.
 
 ## Screenshots
 ![W11](Images/sshot01.png)
+![W11](Images/sshot02.png)
 ![W11](Images/sshot03.png)
 ![W11](Images/sshot04.png)
-
+![W11](Images/sshot05.png)
 
 ## Status
 - UWP app
 - Min. Win. SDK = 10240, and Win. SDK 19041 used
 - Work-in-progress
+- Semi-God mode activated (jump power increased, and lifeTimes always is 5))
 
 ## ToDo
 - Fix System.Runtime.Serialization.Formatters (compatibility with UAP 10240)

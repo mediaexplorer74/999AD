@@ -72,9 +72,9 @@ namespace GameManager
       GameEvents.Reset();
 
       // RnD: current room reset (hack)
-      RoomsManager.CurrentRoom = RoomsManager.Rooms.tutorial0;
+      //RoomsManager.CurrentRoom = RoomsManager.Rooms.churchBellTower0;
 
-       switch (RoomsManager.CurrentRoom)
+      switch (RoomsManager.CurrentRoom)
       {
         case RoomsManager.Rooms.tutorial0:
           if (RoomsManager.PreviousRoom == RoomsManager.Rooms.tutorial4)
@@ -265,11 +265,8 @@ namespace GameManager
             Player.position = new Vector2(500f, 289f);
             break;
           }
-
-          //RnD
-          Player.position = new Vector2(500f, 289f); //Player.position = new Vector2(21f, 129f);
-
-        break;
+          Player.position = new Vector2(21f, 129f);
+          break;
       }
     }
 

@@ -22,9 +22,7 @@ namespace GameManager
     private int widthTiles;
     private int heightTiles;
     private LevelEditor.MenuState menu;
-    private string message = 
-            "LEVEL EDITOR MODE\nLeft click on a tile to change it to the selected type.\n" +
-            "Right click on a tile to remove it.\nPress 'M' to access the menu.\n\nEnter to begin.";
+    private string message = "LEVEL EDITOR MODE\nLeft click on a tile to change it to the selected type.\nRight click on a tile to remove it.\nPress 'M' to access the menu.\n\nEnter to begin.";
     private int userInputInt;
     private string userInputString = "";
     private bool randomMode;
@@ -73,8 +71,8 @@ namespace GameManager
 
     private Point TileFromPointerLocation(MouseState mouseState)
     {
-      int num1 = (int)((mouseState.X / Game1.scale + Camera.Rectangle.X) / Tile.tileSize);
-      int num2 = (int)(mouseState.Y / Game1.scale + Camera.Rectangle.Y) / Tile.tileSize;
+      int num1 = (mouseState.X / Game1.scale + Camera.Rectangle.X) / Tile.tileSize;
+      int num2 = (mouseState.Y / Game1.scale + Camera.Rectangle.Y) / Tile.tileSize;
       int max = MapsManager.maps[this.currentRoomNumber].roomWidthTiles - 1;
       return new Point(MathHelper.Clamp(num1, 0, max), MathHelper.Clamp(num2, 0, MapsManager.maps[this.currentRoomNumber].roomHeightTiles - 1));
     }
@@ -451,9 +449,7 @@ namespace GameManager
           }
           if (mouseState.X >= Game1.gameWidth * Game1.scale && mouseState.X < Game1.viewportRectangle.Width && mouseState.Y >= 0 && mouseState.Y < Game1.viewportRectangle.Height && mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed)
           {
-            this.userInputString = this.userInputString + "," + ((mouseState.X - Game1.gameWidth * Game1.scale) 
-                     / (Tile.tileSize * Game1.scale) + mouseState.Y / (Tile.tileSize * Game1.scale) 
-                     * tilesPerRow).ToString() + ",";
+            this.userInputString = this.userInputString + "," + ((mouseState.X - Game1.gameWidth * Game1.scale) / (Tile.tileSize * Game1.scale) + mouseState.Y / (Tile.tileSize * Game1.scale) * tilesPerRow).ToString() + ",";
             this.message = "Enter the indexes of the tiles you want to\nrandomly select from (format: index1,index2...)\nYou can also click the tiles displayed on the right.\nIndexes: " + this.userInputString;
             break;
           }
@@ -509,8 +505,7 @@ namespace GameManager
       CameraManager.pointLocked.X = MathHelper.Clamp(CameraManager.pointLocked.X, (float) Game1.gameWidth / 2f, (float) MapsManager.maps[this.currentRoomNumber].RoomWidthtPx - (float) Game1.gameWidth / 2f);
       CameraManager.pointLocked.Y = MathHelper.Clamp(CameraManager.pointLocked.Y, (float) Game1.gameHeight / 2f, (float) MapsManager.maps[this.currentRoomNumber].RoomHeightPx - (float) Game1.gameHeight / 2f);
       Tile.TileType tileType;
-      if (mouseState.X >= 0 && mouseState.X < Game1.gameWidth * Game1.scale
-                && mouseState.Y >= 0 && mouseState.Y < Game1.gameHeight * Game1.scale)
+      if (mouseState.X >= 0 && mouseState.X < Game1.gameWidth * Game1.scale && mouseState.Y >= 0 && mouseState.Y < Game1.gameHeight * Game1.scale)
       {
         Point point = this.TileFromPointerLocation(mouseState);
         this.hoveredTileType = (int) MapsManager.maps[this.currentRoomNumber].array[point.Y, point.X].tileType;
@@ -547,11 +542,9 @@ namespace GameManager
         strArray[8] = ")";
         this.tilePositionInfo = string.Concat(strArray);
       }
-      else if (mouseState.X >= Game1.gameWidth * Game1.scale && mouseState.X < Game1.viewportRectangle.Width
-                && mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed)
+      else if (mouseState.X >= Game1.gameWidth * Game1.scale && mouseState.X < Game1.viewportRectangle.Width && mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed)
       {
-         int num = (int)((mouseState.X - Game1.gameWidth * Game1.scale) / (Tile.tileSize * Game1.scale))
-                    + (int)(mouseState.Y / (Tile.tileSize * Game1.scale)) * tilesPerRow;
+        int num = (mouseState.X - Game1.gameWidth * Game1.scale) / (Tile.tileSize * Game1.scale) + mouseState.Y / (Tile.tileSize * Game1.scale) * tilesPerRow;
         if (num < 68)
         {
           this.randomMode = false;
@@ -670,25 +663,13 @@ namespace GameManager
     {
       if (this.menu == LevelEditor.MenuState.start)
       {
-        spriteBatch.DrawString(this.arial32, this.message, new Vector2((float) (Game1.viewportRectangle.Width / 2),
-            (float) (Game1.viewportRectangle.Height / 2)) - this.arial32.MeasureString(this.message) / 2f, Color.Black);
+        spriteBatch.DrawString(this.arial32, this.message, new Vector2((float) (Game1.viewportRectangle.Width / 2), (float) (Game1.viewportRectangle.Height / 2)) - this.arial32.MeasureString(this.message) / 2f, Color.Black);
       }
       else
       {
-        spriteBatch.DrawString(this.arial14, this.tileTypeInfo, 
-            new Vector2((float) (Game1.gameWidth * Game1.scale / 2), (float) (Game1.gameHeight
-            * Game1.scale + infoBoxHeightPx * Game1.scale / 2)) 
-            - this.arial14.MeasureString(this.tileTypeInfo) / 2f, Color.Black);
-
-        spriteBatch.DrawString(this.arial14, this.tilePositionInfo, 
-            new Vector2((float) (Game1.gameWidth * Game1.scale - 10) 
-            - this.arial14.MeasureString(this.tilePositionInfo).X, (float) (Game1.gameHeight * Game1.scale
-            + infoBoxHeightPx * Game1.scale / 2) - this.arial14.MeasureString(this.tilePositionInfo).Y / 2f),
-            Color.Black);
-
-        spriteBatch.DrawString(this.arial14, this.roomInfo, new Vector2(10f, 
-            (float) (Game1.gameHeight * Game1.scale + infoBoxHeightPx * Game1.scale / 2)
-            - this.arial14.MeasureString(this.roomInfo).Y / 2f), Color.Black);
+        spriteBatch.DrawString(this.arial14, this.tileTypeInfo, new Vector2((float) (Game1.gameWidth * Game1.scale / 2), (float) (Game1.gameHeight * Game1.scale + infoBoxHeightPx * Game1.scale / 2)) - this.arial14.MeasureString(this.tileTypeInfo) / 2f, Color.Black);
+        spriteBatch.DrawString(this.arial14, this.tilePositionInfo, new Vector2((float) (Game1.gameWidth * Game1.scale - 10) - this.arial14.MeasureString(this.tilePositionInfo).X, (float) (Game1.gameHeight * Game1.scale + infoBoxHeightPx * Game1.scale / 2) - this.arial14.MeasureString(this.tilePositionInfo).Y / 2f), Color.Black);
+        spriteBatch.DrawString(this.arial14, this.roomInfo, new Vector2(10f, (float) (Game1.gameHeight * Game1.scale + infoBoxHeightPx * Game1.scale / 2) - this.arial14.MeasureString(this.roomInfo).Y / 2f), Color.Black);
         if (this.menu == LevelEditor.MenuState.start || this.menu == LevelEditor.MenuState.none)
           return;
         spriteBatch.Draw(this.whiteTexture, new Rectangle((int) ((double) (Game1.viewportRectangle.Width / 2) - (double) this.arial32.MeasureString(this.message).X / 2.0 - 10.0), (int) ((double) (Game1.viewportRectangle.Height / 2) - (double) this.arial32.MeasureString(this.message).Y / 2.0 - 10.0), (int) this.arial32.MeasureString(this.message).X + 20, (int) this.arial32.MeasureString(this.message).Y + 20), Color.LightGray);

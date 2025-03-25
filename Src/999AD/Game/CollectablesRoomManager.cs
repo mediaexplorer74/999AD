@@ -33,10 +33,14 @@ namespace GameManager
       {
         if (this.collectables[index].Collected)
         {
-          if (this.collectables[index].type == Collectable.ItemType.heart)
-            Player.IncreaseHealth();
-          else
-            CollectablesManager.AddToInventory(this.collectables[index]);
+            // if heart found then increase health
+            if (this.collectables[index].type == Collectable.ItemType.heart)
+            {
+                Player.IncreaseHealth();
+            }
+            else
+                CollectablesManager.AddToInventory(this.collectables[index]);
+
           this.collectables.RemoveAt(index);
         }
         else

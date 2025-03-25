@@ -28,15 +28,29 @@ namespace GameManager
       Collectable.Inizialize(spritesheet);
       CollectablesManager.collectablesRoomManagers = new CollectablesRoomManager[18]
       {
-        new CollectablesRoomManager(new Collectable[2]
+        new CollectablesRoomManager(new Collectable[7]//[2]
         {
           new Collectable(new Point(168, 198), Collectable.ItemType.brassKey),
+          new Collectable(new Point(168, 150), Collectable.ItemType.brassKey), // hack
+          new Collectable(new Point(188, 150), Collectable.ItemType.bronzeKey), // hack
+          new Collectable(new Point(208, 150), Collectable.ItemType.silverKey), // hack
+          new Collectable(new Point(148, 150), Collectable.ItemType.goldKey), // hack
+          new Collectable(new Point(128, 150), Collectable.ItemType.goldKey),// hack
           new Collectable(new Point(628, 148), Collectable.ItemType.brassKey)
         }),
-        new CollectablesRoomManager(new Collectable[0]),
-        new CollectablesRoomManager(new Collectable[1]
+
+        //new CollectablesRoomManager(new Collectable[0]),
+        new CollectablesRoomManager(new Collectable[3]//[2]
         {
-          new Collectable(new Point(506, 150), Collectable.ItemType.heart)
+          new Collectable(new Point(179, 206), Collectable.ItemType.brassKey),
+          new Collectable(new Point(179, /*198*/169), Collectable.ItemType.brassKey), // hack
+          new Collectable(new Point(648, 158), Collectable.ItemType.brassKey)
+        }),
+
+        new CollectablesRoomManager(new Collectable[2]//[1]
+        {
+          new Collectable(new Point(506, 150), Collectable.ItemType.heart),
+          new Collectable(new Point(519, 169), Collectable.ItemType.heart)
         }),
         new CollectablesRoomManager(new Collectable[0]),
         new CollectablesRoomManager(new Collectable[0]),
@@ -77,12 +91,21 @@ namespace GameManager
         {
           new Collectable(new Point(348, 188), Collectable.ItemType.heart)
         }),
-        new CollectablesRoomManager(new Collectable[2]
+        new CollectablesRoomManager(new Collectable[4]//[2]
         {
           new Collectable(new Point(20, 416), Collectable.ItemType.goldKey),
-          new Collectable(new Point(386, 416), Collectable.ItemType.heart)
+          new Collectable(new Point(386, 416), Collectable.ItemType.heart),
+          new Collectable(new Point(40, 436), Collectable.ItemType.goldKey),
+          new Collectable(new Point(406, 436), Collectable.ItemType.heart)
         }),
-        new CollectablesRoomManager(new Collectable[0]),
+        //new CollectablesRoomManager(new Collectable[0]),
+        new CollectablesRoomManager(new Collectable[4]//[2]
+        {
+          new Collectable(new Point(20, 416), Collectable.ItemType.goldKey),
+          new Collectable(new Point(386, 416), Collectable.ItemType.heart),
+          new Collectable(new Point(40, 436), Collectable.ItemType.goldKey),
+          new Collectable(new Point(406, 436), Collectable.ItemType.heart)
+        }),
         new CollectablesRoomManager(new Collectable[1]
         {
           new Collectable(new Point(26, 215), Collectable.ItemType.goldKey)
