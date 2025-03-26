@@ -49,12 +49,14 @@ namespace GameManager
                                 MonologuesRoomManager.sourceRectangle_interactSymbol.Width, 
                                 MonologuesRoomManager.sourceRectangle_interactSymbol.Height);
 
-            if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter) || Game1.previousKeyboard.IsKeyDown(Keys.Enter))
+            if ( (!Game1.currentKeyboardState.IsKeyDown(Keys.Enter) || Game1.previousKeyboardState.IsKeyDown(Keys.Enter))
+                    && !(Game1.currentTouchState.Count == 2 /*&& Game1.previousTouchState.Count != 2*/)
+               )
             {
-              GamePadButtons buttons = Game1.currentGamePad.Buttons;
+              GamePadButtons buttons = Game1.currentGamePadState.Buttons;
               if (buttons.B != ButtonState.Pressed)
                 return;
-              buttons = Game1.previousGamePad.Buttons;
+              buttons = Game1.previousGamePadState.Buttons;
               if (buttons.B != ButtonState.Released)
                 return;
             }

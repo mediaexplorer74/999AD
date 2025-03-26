@@ -32,39 +32,9 @@ namespace GameManager
         }
 
        
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             
-            // **********************************************************************************         
-            // The database will be installed together with the application in the folder. 
-            // However, the application takes databases from 
-            // the ApplicationData.Current.LocalFolder folder. 
-            // Therefore, when we first launch the application, 
-            // we need to copy the database to ApplicationData.Current.LocalFolder
-            /* 
-            // "First app start or not"?
-            if (await ApplicationData.Current.LocalFolder.TryGetItemAsync("terraria.db") == null)
-            {
-                StorageFile databaseFile = default;
-
-                try
-                {
-                    databaseFile =
-                        await Package.Current.InstalledLocation.GetFileAsync("terraria.db");
-
-                    // Copy DB
-                    await databaseFile.CopyAsync(ApplicationData.Current.LocalFolder);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("[ex] databaseFile.CopyAsync error: " + ex.Message);
-                }
-            }
-            */
-            //**************************************************************************
-            
-
-
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,

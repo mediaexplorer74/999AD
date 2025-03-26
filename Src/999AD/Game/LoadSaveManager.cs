@@ -6,8 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary1;
+//using System.Runtime.Serialization.Formatters.Binary; //TODO
 using Windows.Storage;
 
 
@@ -59,7 +60,8 @@ namespace GameManager
         Player.position.Y
       }, _itemsOnMap, _itemsTypesInInvntory, _closedDoors, (MidBoss.Dead ? 1 : 0) != 0, 
       (FinalBoss.Dead ? 1 : 0) != 0, GameEvents.eventAlreadyHappened);
-      BinaryFormatter binaryFormatter = new BinaryFormatter();
+      
+      //BinaryFormatter binaryFormatter = new BinaryFormatter();
            
       FileStream fileStream = new FileStream(LoadSaveManager.filePathGame, FileMode.Create);
       FileStream serializationStream = fileStream;
@@ -71,11 +73,11 @@ namespace GameManager
 
     public static void SaveHighScores(AchievementsSaveData achievements)
     {
-      BinaryFormatter binaryFormatter = new BinaryFormatter();
+      //BinaryFormatter binaryFormatter = new BinaryFormatter();
       FileStream fileStream = new FileStream(LoadSaveManager.filePathScores, FileMode.Create);
       FileStream serializationStream = fileStream;
       AchievementsSaveData graph = achievements;
-      binaryFormatter.Serialize((Stream) serializationStream, (object) graph);
+      //binaryFormatter.Serialize((Stream) serializationStream, (object) graph);
       fileStream.Dispose();//Close();
       Achievements.UpdateAchievements(achievements.gameCompleted, achievements.noDeath, achievements.noHits, achievements.bestTime);
     }
@@ -94,12 +96,14 @@ namespace GameManager
       FileStream serializationStream = new FileStream(LoadSaveManager.filePathGame, FileMode.Open);
       try
       {
-        (new BinaryFormatter().Deserialize((Stream) serializationStream) as GameSaveData).ApplySaveData();
+        //TODO
+        //(new BinaryFormatter().Deserialize((Stream) serializationStream) as GameSaveData).ApplySaveData();
         serializationStream.Dispose();//Close();
         return true;
       }
       catch (Exception ex)
       {
+        Debug.WriteLine("[ex] LoadSaveManager - LoadGame error: " + ex.Message);
         serializationStream.Dispose();
         return false;
       }
@@ -112,13 +116,18 @@ namespace GameManager
         FileStream serializationStream = new FileStream(LoadSaveManager.filePathScores, FileMode.Open);
         try
         {
-          AchievementsSaveData achievementsSaveData = new BinaryFormatter().Deserialize((Stream) serializationStream) as AchievementsSaveData;
-          Achievements.UpdateAchievements(achievementsSaveData.gameCompleted, achievementsSaveData.noDeath, achievementsSaveData.noHits, achievementsSaveData.bestTime);
-                    serializationStream.Dispose();//Close();
+          //TODO
+          //AchievementsSaveData achievementsSaveData = 
+          //              new BinaryFormatter().Deserialize((Stream) serializationStream) as AchievementsSaveData;
+
+          //Achievements.UpdateAchievements(achievementsSaveData.gameCompleted, 
+          //    achievementsSaveData.noDeath, achievementsSaveData.noHits, achievementsSaveData.bestTime);
+          serializationStream.Dispose();//Close();
         }
         catch (Exception ex)
         {
-          Achievements.UpdateAchievements(false, false, false, 0.0f);
+            Debug.WriteLine("[i] LoadSaveManager - LoadHighScores warning: " + ex.Message);
+            Achievements.UpdateAchievements(false, false, false, 0.0f);
         }
       }
       else

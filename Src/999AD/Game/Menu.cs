@@ -7,6 +7,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Diagnostics;
 
 
 namespace GameManager
@@ -42,34 +44,84 @@ namespace GameManager
 
     public void Update()
     {
-      if (!Game1.currentKeyboard.IsKeyDown(Keys.Down) || Game1.previousKeyboard.IsKeyDown(Keys.Down))
+      if (!Game1.currentKeyboardState.IsKeyDown(Keys.Down) || Game1.previousKeyboardState.IsKeyDown(Keys.Down))
       {
-        GamePadDPad dpad = Game1.currentGamePad.DPad;
+        GamePadDPad dpad = Game1.currentGamePadState.DPad;
+
         if (dpad.Down == ButtonState.Pressed)
         {
-          dpad = Game1.previousGamePad.DPad;
+          dpad = Game1.previousGamePadState.DPad;
           if (dpad.Down == ButtonState.Released)
             goto label_3;
         }
-        if (!Game1.currentKeyboard.IsKeyDown(Keys.Up) || Game1.previousKeyboard.IsKeyDown(Keys.Up))
+
+        if (!Game1.currentKeyboardState.IsKeyDown(Keys.Up) || Game1.previousKeyboardState.IsKeyDown(Keys.Up))
         {
-          dpad = Game1.currentGamePad.DPad;
-          if (dpad.Up == ButtonState.Pressed)
-          {
-            dpad = Game1.previousGamePad.DPad;
-            if (dpad.Up == ButtonState.Released)
-              goto label_7;
-          }
-          if (Game1.currentMouseState.X != Game1.previousMouseState.X || Game1.currentMouseState.Y != Game1.previousMouseState.Y)
-          {
-            for (int index = 0; index < this.totalNumberOfOptions; ++index)
+            dpad = Game1.currentGamePadState.DPad;
+            if (dpad.Up == ButtonState.Pressed)
             {
-              if (this.positionOnScreen_options[index].Contains(new Point((Game1.currentMouseState.X - Game1.viewportRectangle.X) / Game1.scale, (Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / Game1.scale)))
-                this.currentOption = index;
+                dpad = Game1.previousGamePadState.DPad;
+                if (dpad.Up == ButtonState.Released)
+                    goto label_7;
             }
-            goto label_14;
-          }
-          else
+
+            if (Game1.currentMouseState.X != Game1.previousMouseState.X
+                            || Game1.currentMouseState.Y != Game1.previousMouseState.Y)
+            {
+                for (int index = 0; index < this.totalNumberOfOptions; ++index)
+                {
+                    if (
+                        this.positionOnScreen_options[index].Contains
+                        (
+                            new Point(
+                                (int)((Game1.currentMouseState.X - Game1.viewportRectangle.X) / Game1.scaleX),
+                                (int)((Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / Game1.scaleY)
+                               )
+                        )
+                        )
+                        this.currentOption = index;
+                }
+                //goto label_14;
+            }
+            else
+            {
+                //goto label_14;
+            }
+
+            float PrevPosX = 0;
+            float PrevPosY = 0;
+            try
+            {
+                if (Game1.previousTouchState.Count > 0)
+                {
+                    PrevPosX = Game1.previousTouchState[0].Position.X;
+                    PrevPosY = Game1.previousTouchState[0].Position.Y;
+                }
+            }
+            catch { }
+
+            if (Game1.currentTouchState.Count > 0)
+              if ( (Game1.currentTouchState[0].Position.X != PrevPosX
+                    || Game1.currentTouchState[0].Position.Y != PrevPosY) )
+                {
+                    for (int index = 0; index < this.totalNumberOfOptions; ++index)
+                    {
+                        if
+                        (this.positionOnScreen_options[index].Contains
+                            (new Point
+                            (
+                                (int)((Game1.currentTouchState[0].Position.X - Game1.viewportRectangle.X) / Game1.scaleX),
+                                (int)((Game1.currentTouchState[0].Position.Y - Game1.viewportRectangle.Y) / Game1.scaleY)
+                            )
+                            )
+                        )
+                            this.currentOption = index;
+                    }
+                    goto label_14;
+                }
+                else
+                    goto label_14;            
+            
             goto label_14;
         }
 label_7:
@@ -78,30 +130,55 @@ label_7:
       }
 label_3:
       this.currentOption = (this.currentOption + 1) % this.totalNumberOfOptions;
+
 label_14:
-      if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter) || Game1.previousKeyboard.IsKeyDown(Keys.Enter))
+      if ((!Game1.currentKeyboardState.IsKeyDown(Keys.Enter) || Game1.previousKeyboardState.IsKeyDown(Keys.Enter))
+       && !(Game1.currentTouchState.Count == 2 /*&& Game1.previousTouchState.Count != 2*/))
       {
-        GamePadButtons buttons = Game1.currentGamePad.Buttons;
+        GamePadButtons buttons = Game1.currentGamePadState.Buttons;
         if (buttons.A == ButtonState.Pressed)
         {
-          buttons = Game1.previousGamePad.Buttons;
+          buttons = Game1.previousGamePadState.Buttons;
           if (buttons.A == ButtonState.Released)
             goto label_17;
         }
-        if (Game1.currentMouseState.LeftButton == ButtonState.Pressed && Game1.previousMouseState.LeftButton == ButtonState.Released)
+
+            
+        if (Game1.currentMouseState.LeftButton == ButtonState.Pressed 
+                    && Game1.previousMouseState.LeftButton == ButtonState.Released)
         {
-          if (!this.positionOnScreen_options[this.currentOption].Contains(new Point((Game1.currentMouseState.X - Game1.viewportRectangle.X) / Game1.scale, (Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / Game1.scale)))
+            if (!this.positionOnScreen_options[this.currentOption].Contains(
+                new Point(
+                    (int)((Game1.currentMouseState.X - Game1.viewportRectangle.X) / Game1.scaleX),
+                    (int)((Game1.currentMouseState.Y - Game1.viewportRectangle.Y) / Game1.scaleY)))
+                )
             return;
-          Game1.currentGameState = this.followingGameState[this.currentOption];
-          this.currentOption = 0;
-          return;
+            Game1.currentGameState = this.followingGameState[this.currentOption];
+            this.currentOption = 0;
+            return;
         }
-        if (!Game1.currentKeyboard.IsKeyDown(Keys.Back) || Game1.previousKeyboard.IsKeyDown(Keys.Back))
+            
+
+        // touchpanel "click" (tap) handling
+        if (Game1.currentTouchState.Count == 1 && Game1.previousTouchState.Count == 0)
         {
-          buttons = Game1.currentGamePad.Buttons;
+            if (!this.positionOnScreen_options[this.currentOption].Contains(
+                new Point(
+                    (int)((Game1.currentTouchState[0].Position.X - Game1.viewportRectangle.X) / Game1.scaleX),
+                    (int)((Game1.currentTouchState[0].Position.Y - Game1.viewportRectangle.Y) / Game1.scaleY)))
+                    )
+                return;
+            Game1.currentGameState = this.followingGameState[this.currentOption];
+            this.currentOption = 0;
+            return;
+        }
+
+        if (!Game1.currentKeyboardState.IsKeyDown(Keys.Back) || Game1.previousKeyboardState.IsKeyDown(Keys.Back))
+        {
+          buttons = Game1.currentGamePadState.Buttons;
           if (buttons.B != ButtonState.Pressed)
             return;
-          buttons = Game1.previousGamePad.Buttons;
+          buttons = Game1.previousGamePadState.Buttons;
           if (buttons.B != ButtonState.Released)
             return;
         }
@@ -122,7 +199,9 @@ label_17:
     {
       spriteBatch.Draw(this.backgroungImage, new Vector2(0.0f, 0.0f), Color.White * alphaValue);
       for (int index = 0; index < this.totalNumberOfOptions; ++index)
-        spriteBatch.Draw(Menu.spritesheet_options, this.positionOnScreen_options[index], new Rectangle?(this.sourceRectangles_options[index]), this.currentOption != index ? Color.White : Color.Red);
+        spriteBatch.Draw(Menu.spritesheet_options, 
+         this.positionOnScreen_options[index], new Rectangle?(this.sourceRectangles_options[index]), 
+         this.currentOption != index ? Color.White : Color.Red);
     }
   }
 }

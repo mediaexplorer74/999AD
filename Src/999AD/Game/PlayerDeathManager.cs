@@ -38,15 +38,18 @@ namespace GameManager
       if ((double) PlayerDeathManager.elapsedTimeBeforeResuming < (double) PlayerDeathManager.timeBeforeResuming)
       {
         PlayerDeathManager.elapsedTimeBeforeResuming += elapsedTime;
-        PlayerDeathManager.alphaValue = MathHelper.Lerp(0.0f, 1f, PlayerDeathManager.elapsedTimeBeforeResuming / PlayerDeathManager.timeBeforeResuming);
+        PlayerDeathManager.alphaValue = MathHelper.Lerp(0.0f, 1f, 
+            PlayerDeathManager.elapsedTimeBeforeResuming / PlayerDeathManager.timeBeforeResuming);
+
         if ((double) PlayerDeathManager.elapsedTimeBeforeResuming < (double) PlayerDeathManager.timeBeforeResuming)
           return;
         PlayerDeathManager.alphaValue = 1f;
       }
       else
       {
-        if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter)
-                    && Game1.currentGamePad.Buttons.A != ButtonState.Pressed)
+        if (!Game1.currentKeyboardState.IsKeyDown(Keys.Enter)
+            && !(Game1.currentTouchState.Count == 2 /*&& Game1.previousTouchState.Count != 2*/)
+            && Game1.currentGamePadState.Buttons.A != ButtonState.Pressed)
           return;
         Player.ReplenishHealth();
         PlayerDeathManager.ResetVariables();

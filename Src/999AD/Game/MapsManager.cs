@@ -7,6 +7,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 
@@ -51,18 +52,25 @@ namespace GameManager
                     for (int index4 = 0; index4 < intListList[0].Count; ++index4)
                     {
                         if (intListList[index3][index4] != 0)
-                            MapsManager.maps[index1].array[index3, index4].tileType = (Tile.TileType)intListList[index3][index4];
+                            MapsManager.maps[index1].array[index3, index4].tileType
+                                        = (Tile.TileType)intListList[index3][index4];
                     }
                 }
             }
         }
         catch (IOException ex)
         {
-          MapsManager.maps[index1] = new RoomMap((Game1.gameHeight + 2 * CameraManager.maxOffsetY + Tile.tileSize - 1) / Tile.tileSize, (Game1.gameWidth + Tile.tileSize - 1) / Tile.tileSize);
+          Debug.WriteLine("[i] MapsManager warning: " + ex.Message);
+          MapsManager.maps[index1] = new RoomMap((Game1.gameHeight + 2
+              * CameraManager.maxOffsetY + Tile.tileSize - 1) / Tile.tileSize, (Game1.gameWidth + Tile.tileSize - 1) 
+              / Tile.tileSize);
         }
         catch (ArgumentOutOfRangeException ex)
         {
-          MapsManager.maps[index1] = new RoomMap((Game1.gameHeight + 2 * CameraManager.maxOffsetY + Tile.tileSize - 1) / Tile.tileSize, (Game1.gameWidth + Tile.tileSize - 1) / Tile.tileSize);
+          Debug.WriteLine("[i] MapsManager warning:  " + ex.Message);
+          MapsManager.maps[index1] = new RoomMap((Game1.gameHeight + 2 
+              * CameraManager.maxOffsetY + Tile.tileSize - 1) / Tile.tileSize, (Game1.gameWidth + Tile.tileSize - 1)
+              / Tile.tileSize);
         }
       }
     }
@@ -73,36 +81,40 @@ namespace GameManager
       try
       {
         var StringFileName = "mapFiles\\mapRoom_" + roomName.ToString() + ".txt";
-                using (var streamReader = new StreamReader(new FileStream(StringFileName, FileMode.Open, FileAccess.ReadWrite)))
+
+        using (var streamReader = new StreamReader(new FileStream(StringFileName, 
+            FileMode.Open, FileAccess.ReadWrite)))
+        {
+            string str1 = streamReader.ReadLine();
+            int index1 = 0;
+            while (str1 != null)
+            {
+                intListList.Add(new List<int>());
+                string str2 = str1;
+                char[] separator = new char[1] { ',' };
+                foreach (string s in str2.Split(separator, StringSplitOptions.RemoveEmptyEntries))
+                    intListList[index1].Add(int.Parse(s));
+                str1 = streamReader.ReadLine();
+                ++index1;
+            }
+            MapsManager.maps[(int)roomName] = new RoomMap(intListList.Count, intListList[0].Count);
+            for (int index2 = 0; index2 < intListList.Count; ++index2)
+            {
+                for (int index3 = 0; index3 < intListList[0].Count; ++index3)
                 {
-                    string str1 = streamReader.ReadLine();
-                    int index1 = 0;
-                    while (str1 != null)
-                    {
-                        intListList.Add(new List<int>());
-                        string str2 = str1;
-                        char[] separator = new char[1] { ',' };
-                        foreach (string s in str2.Split(separator, StringSplitOptions.RemoveEmptyEntries))
-                            intListList[index1].Add(int.Parse(s));
-                        str1 = streamReader.ReadLine();
-                        ++index1;
-                    }
-                    MapsManager.maps[(int)roomName] = new RoomMap(intListList.Count, intListList[0].Count);
-                    for (int index2 = 0; index2 < intListList.Count; ++index2)
-                    {
-                        for (int index3 = 0; index3 < intListList[0].Count; ++index3)
-                        {
-                            if (intListList[index2][index3] != 0)
-                                MapsManager.maps[(int)roomName].array[index2, index3].tileType = (Tile.TileType)intListList[index2][index3];
-                        }
-                    }
+                    if (intListList[index2][index3] != 0)
+                        MapsManager.maps[(int)roomName].array[index2, index3].tileType = (Tile.TileType)intListList[index2][index3];
                 }
+            }
+        }
       }
       catch (IOException ex)
       {
+         Debug.WriteLine(ex.Message);
       }
       catch (ArgumentOutOfRangeException ex)
       {
+        Debug.WriteLine(ex.Message);
       }
     }
   }

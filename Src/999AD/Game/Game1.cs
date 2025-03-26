@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Media;
 
 
@@ -21,44 +22,86 @@ namespace GameManager
     public static readonly int minViewportHeight = 216;
     public static int gameWidth;
     public static int gameHeight;
+    //public static bool IsTouchPanelExist = true; // start accept
     public static Rectangle viewportRectangle;
     private static RenderTarget2D nativeRenderTarget;
     private static RenderTarget2D renderTarget_zoom1;
     private static RenderTarget2D renderTarger_zoom0dot5;
-    public static int scale;
+    public static float scaleX;
+    public static float scaleY;
+
     public static MouseState currentMouseState;
     public static MouseState previousMouseState;
-    public static KeyboardState previousKeyboard;
-    public static KeyboardState currentKeyboard;
-    public static GamePadState previousGamePad;
-    public static GamePadState currentGamePad;
+
+    public static TouchCollection currentTouchState;
+    public static TouchCollection previousTouchState;
+
+    public static KeyboardState previousKeyboardState;
+    public static KeyboardState currentKeyboardState;
+
+    public static GamePadState previousGamePadState;
+    public static GamePadState currentGamePadState;
+
     public static Game1.GameStates currentGameState;
     private bool gameInitialized;
-    private SpriteFont spriteFont;
+  
     public static Texture2D white;
 
     public Game1()
     {
+      
       this.graphics = new GraphicsDeviceManager((Game) this);
+
+      this.graphics.GraphicsProfile = GraphicsProfile.Reach; // Experimental
+
       this.Content.RootDirectory = "Content";
     }
 
     protected override void Initialize()
     {
       this.IsMouseVisible = true;
-      Game1.gameWidth = Game1.minViewportWidth;
-      Game1.gameHeight = Game1.minViewportHeight;
-      Game1.scale = MathHelper.Min(this.GraphicsDevice.DisplayMode.Width / Game1.gameWidth, this.GraphicsDevice.DisplayMode.Height / Game1.gameHeight);
-      Game1.renderTarget_zoom1 = new RenderTarget2D(this.GraphicsDevice, Game1.gameWidth, Game1.gameHeight);
+
+         Game1.gameWidth = Game1.minViewportWidth;
+         Game1.gameHeight = Game1.minViewportHeight;
+
+            //this.graphics.PreferredBackBufferWidth = 640; // Experimental
+
+            /*Game1.scale = MathHelper.Min(
+                  GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / Game1.gameWidth,
+                  GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / Game1.gameHeight);*/
+
+            Game1.scaleX = //2;
+                GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / Game1.gameWidth;
+
+            Game1.scaleY = //4;
+                GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / Game1.gameHeight;
+
+
+
+            Game1.renderTarget_zoom1 = new RenderTarget2D(this.GraphicsDevice, Game1.gameWidth, Game1.gameHeight);
       Game1.renderTarger_zoom0dot5 = new RenderTarget2D(this.GraphicsDevice, Game1.gameWidth * 2, Game1.gameHeight * 2);
-      Game1.viewportRectangle = new Rectangle((this.GraphicsDevice.DisplayMode.Width - Game1.gameWidth * Game1.scale) / 2, (this.GraphicsDevice.DisplayMode.Height - Game1.gameHeight * Game1.scale) / 2, Game1.gameWidth * Game1.scale, Game1.gameHeight * Game1.scale);
-      this.graphics.PreferredBackBufferWidth = this.GraphicsDevice.DisplayMode.Width;
-      this.graphics.PreferredBackBufferHeight = this.GraphicsDevice.DisplayMode.Height;
-      this.graphics.IsFullScreen = false;//true;
+
+      Game1.viewportRectangle = new Rectangle(
+          (int)(this.GraphicsDevice.DisplayMode.Width - Game1.gameWidth * Game1.scaleX) / 2, 
+          (int)(this.GraphicsDevice.DisplayMode.Height - Game1.gameHeight * Game1.scaleY) / 2, 
+          (int)(Game1.gameWidth * Game1.scaleX), 
+          (int)(Game1.gameHeight * Game1.scaleY)
+          );
+
+      this.graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            //this.GraphicsDevice.DisplayMode.Width;
+
+      this.graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            //this.GraphicsDevice.DisplayMode.Height;
+
+      this.graphics.IsFullScreen = true;//true; // set it *true* for W10M 
       this.graphics.ApplyChanges();
-      Game1.previousKeyboard = Keyboard.GetState();
-      Game1.previousGamePad = GamePad.GetState(PlayerIndex.One);
-      Game1.previousMouseState = Mouse.GetState();
+      
+      Game1.previousKeyboardState = Keyboard.GetState();
+      Game1.previousGamePadState = GamePad.GetState(PlayerIndex.One);
+
+      //Game1.previousMouseState = Mouse.GetState();
+       Game1.previousTouchState = TouchPanel.GetState();
       base.Initialize();
     }
 
@@ -163,9 +206,12 @@ namespace GameManager
       if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().IsKeyDown(Keys.Escape))
         this.Exit();
-      Game1.currentKeyboard = Keyboard.GetState();
-      Game1.currentGamePad = GamePad.GetState(PlayerIndex.One);
+
+      Game1.currentKeyboardState = Keyboard.GetState();
+      Game1.currentGamePadState = GamePad.GetState(PlayerIndex.One);
       Game1.currentMouseState = Mouse.GetState();
+      Game1.currentTouchState = TouchPanel.GetState();
+
       float totalSeconds = (float) gameTime.ElapsedGameTime.TotalSeconds;
       switch (Game1.currentGameState)
       {
@@ -187,30 +233,28 @@ namespace GameManager
           MenusManager.menus[3].Update();
           break;
         case Game1.GameStates.intro:
-          // RnD: skip cut-scenes 
-          /*if (CutscenesManager.cutscenes[0].active)
+
+          // RnD: skip cut-scenes ( hack )
+          // / *
+          if (CutscenesManager.cutscenes[0].active)
           {
             CutscenesManager.cutscenes[0].Update(totalSeconds);
             break;
-          }*/
+          }
+          // * /
+
           Game1.currentGameState = Game1.GameStates.playing;
           break;
         case Game1.GameStates.playing:
           GameStats.Update(totalSeconds);
-          if (Game1.currentKeyboard.IsKeyDown(Keys.P) && !Game1.previousKeyboard.IsKeyDown(Keys.P) 
-                || Game1.currentKeyboard.IsKeyDown(Keys.M) && !Game1.previousKeyboard.IsKeyDown(Keys.M)
-                || Game1.currentGamePad.Buttons.Start == ButtonState.Pressed
-                && Game1.previousGamePad.Buttons.Start == ButtonState.Released)
+          if ( (Game1.currentKeyboardState.IsKeyDown(Keys.P) && !Game1.previousKeyboardState.IsKeyDown(Keys.P) )
+               || (Game1.currentKeyboardState.IsKeyDown(Keys.M) && !Game1.previousKeyboardState.IsKeyDown(Keys.M))
+               || (Game1.currentTouchState.Count == 3 /*&& Game1.previousTouchState.Count != 3*/)
+               || Game1.currentGamePadState.Buttons.Start == ButtonState.Pressed
+               && Game1.previousGamePadState.Buttons.Start == ButtonState.Released)
           {
             Game1.currentGameState = Game1.GameStates.pause;
             break;
-          }
-
-
-          if (Game1.currentKeyboard.IsKeyDown(Keys.R) && !Game1.previousKeyboard.IsKeyDown(Keys.R))
-          {
-                Game1.currentGameState = Game1.GameStates.wallJump; // experimental
-                break;
           }
 
           RoomsManager.Update(totalSeconds);
@@ -221,12 +265,16 @@ namespace GameManager
           CollectablesManager.Update(totalSeconds);
           break;
         case Game1.GameStates.pause:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.P) 
-                        && !Game1.previousKeyboard.IsKeyDown(Keys.P)
-                        || Game1.currentKeyboard.IsKeyDown(Keys.M) 
-                        && !Game1.previousKeyboard.IsKeyDown(Keys.M) 
-                        || Game1.currentGamePad.Buttons.Start == ButtonState.Pressed
-                        && Game1.previousGamePad.Buttons.Start == ButtonState.Released)
+          if (
+                (Game1.currentKeyboardState.IsKeyDown(Keys.P)  && !Game1.previousKeyboardState.IsKeyDown(Keys.P))
+                || 
+                (Game1.currentKeyboardState.IsKeyDown(Keys.M) && !Game1.previousKeyboardState.IsKeyDown(Keys.M) )
+                ||
+                (Game1.currentTouchState.Count == 3 && Game1.previousTouchState.Count != 3)
+                ||
+                (Game1.currentGamePadState.Buttons.Start == ButtonState.Pressed 
+                  && Game1.previousGamePadState.Buttons.Start == ButtonState.Released)
+            )
           {
             MenusManager.menus[4].Reset();
             Game1.currentGameState = Game1.GameStates.playing;
@@ -272,10 +320,13 @@ namespace GameManager
           MenusManager.menus[7].Update();
           break;
       }
-      Game1.previousKeyboard = Game1.currentKeyboard;
-      Game1.previousGamePad = Game1.currentGamePad;
+
+      Game1.previousKeyboardState = Game1.currentKeyboardState;
+      Game1.previousGamePadState = Game1.currentGamePadState;
       Game1.previousMouseState = Game1.currentMouseState;
-      base.Update(gameTime);
+      Game1.previousTouchState = Game1.currentTouchState;
+
+       base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)

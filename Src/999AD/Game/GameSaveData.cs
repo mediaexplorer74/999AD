@@ -1,5 +1,4 @@
-﻿
-// Type: GameManager.GameSaveData
+﻿// Type: GameManager.GameSaveData
 // Assembly: 999AD, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 88FA0CA8-8FB6-4FB7-AA8C-8F78C65FFFD3
 // Modded by [M]edia[E]xplorer
@@ -7,12 +6,12 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization.Formatters.Binary1;
+//using System.Runtime.Serialization.Formatters.Binary; //TODO
 
 
 namespace GameManager
 {
+  //TODO
   //[Serializable]
   internal class GameSaveData
   {
@@ -84,12 +83,16 @@ namespace GameManager
       if (this.eventAlreadyHappened[6])
       {
         Player.doubleJumpUnlocked = true;
-        AnimatedSpritesManager.animatedSpritesRoomManagers[5].AddTempAnimatedSprite(new AnimatedSprite(new Vector2(211f, 926f), AnimatedSprite.AnimationType.displayDoubleJumpRelic, false));
+        AnimatedSpritesManager.animatedSpritesRoomManagers[5].AddTempAnimatedSprite(
+            new AnimatedSprite(new Vector2(211f, 926f), 
+            AnimatedSprite.AnimationType.displayDoubleJumpRelic, false));
       }
       if (this.eventAlreadyHappened[8])
       {
         Player.wallJumpUnlocked = true;
-        AnimatedSpritesManager.animatedSpritesRoomManagers[5].AddTempAnimatedSprite(new AnimatedSprite(new Vector2(239f, 926f), AnimatedSprite.AnimationType.displayWallJumpRelic, false));
+        AnimatedSpritesManager.animatedSpritesRoomManagers[5]
+                    .AddTempAnimatedSprite(new AnimatedSprite(new Vector2(239f, 926f), 
+                    AnimatedSprite.AnimationType.displayWallJumpRelic, false));
       }
       foreach (CollectablesRoomManager collectablesRoomManager in CollectablesManager.collectablesRoomManagers)
       {
@@ -98,7 +101,8 @@ namespace GameManager
           bool flag = true;
           foreach (int itemsOn in this.itemsOnMap)
           {
-            if (collectablesRoomManager.collectables[index].ID == itemsOn || collectablesRoomManager.collectables[index].ID == -1)
+            if (collectablesRoomManager.collectables[index].ID == itemsOn 
+                            || collectablesRoomManager.collectables[index].ID == -1)
             {
               flag = false;
               break;

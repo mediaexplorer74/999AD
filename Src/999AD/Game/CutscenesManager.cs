@@ -22,9 +22,10 @@ namespace GameManager
       Cutscene.Initialize(spriteFont);
       CutscenesManager.cutscenes = new Cutscene[2]
       {
+          //TODO: realize GAME AUTOSAVES AT EVERY SCREEN TRANSITION feature
         new Cutscene(enemySpritesheet, new Animation(new Rectangle(0, 0, 420, 48), 42, 48, 10, 0.2f, true), new Vector2(171f, 10f), new Vector2(10f, 84f), new string[5]
         {
-          "\n\nNOTE: THIS GAME AUTOSAVES AT EVERY SCREEN TRANSITION.\n\n\n                Press ENTER to start.",
+          /*"\n\nNOTE: THIS GAME AUTOSAVES AT EVERY SCREEN TRANSITION.\n*/"\n\n     Press ENTER (or 2-finger tap screen) to start.",
           "Life starts, ends, and is accompanied by a great\nmany... mysteries. What concerns you right now,\nWandering Knight, is the end of said life,\n\n                   ALL life.",
           "The year has turned to a most concerning of numbers,\n999A.D., his most holy Pope Sylvester II - a man\nof both great knowledge and great faith - fears that\nsuch an auspicious date brings with it a threat to\nall we hold dear.",
           "Missives, like flocks of paper birds have been\nsent forth detailing rituals of evil at locations\nleft to fester in rot and injustice, rituals set to\nbring foul creations never seen before to our\ndoorstep.",

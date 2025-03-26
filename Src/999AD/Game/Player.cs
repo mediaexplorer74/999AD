@@ -179,11 +179,32 @@ namespace GameManager
     {
       if ((double) Player.elapsedShotTime > (double) Player.timeBetweenShots)
       {
-        if ((!Game1.currentKeyboard.IsKeyDown(Keys.Space) 
-                    || Game1.previousKeyboard.IsKeyDown(Keys.Space)) 
-                    && (Game1.currentGamePad.Buttons.X != ButtonState.Pressed 
-                    || Game1.previousGamePad.Buttons.X != ButtonState.Released) || Player.isOnTheWall)
-          return;
+            bool flag0 = false;
+            int PrevVal = 0;
+
+            try
+            {
+                if (Game1.currentTouchState.Count > 0)
+                    PrevVal = Game1.previousTouchState.Count;
+            }
+            catch
+            {
+                Game1.previousTouchState = Game1.currentTouchState;
+            }
+
+                
+            if (Game1.currentTouchState.Count > 0)
+                flag0 = (Game1.currentTouchState.Count == 1 /*&& PrevVal != 1*/);                
+
+                if 
+                (
+                    ( !Game1.currentKeyboardState.IsKeyDown(Keys.Space)/* || Game1.previousKeyboardState.IsKeyDown(Keys.Space) */) 
+                    && ( Game1.currentGamePadState.Buttons.X != ButtonState.Pressed  /*|| Game1.previousGamePadState.Buttons.X != ButtonState.Released*/ )
+                    && ( !flag0 )
+
+                    || Player.isOnTheWall
+                )
+                    return;
 
         ProjectilesManager.ShootPlayerProjectile(Player.isFacingRight 
             ? Player.position + new Vector2((float) Player.width, 0.0f) 
@@ -201,18 +222,42 @@ namespace GameManager
 
     private static void CheckMovementInput()
     {
-      if ((!Game1.currentKeyboard.IsKeyDown(Keys.Up) || Game1.previousKeyboard.IsKeyDown(Keys.Up)) && (!Game1.currentKeyboard.IsKeyDown(Keys.W) || Game1.previousKeyboard.IsKeyDown(Keys.W)))
+
+        bool flag1 = false;
+        float PrevPos = 0;
+
+        try
+        {
+            if ((Game1.currentTouchState.Count > 0) &&
+                (Game1.previousTouchState.Count > 0))
+                PrevPos = Game1.previousTouchState[0].Position.Y;
+        }
+        catch
+        {
+            Game1.previousTouchState = Game1.currentTouchState;
+        }
+
+           
+        if (Game1.currentTouchState.Count > 0)
+            flag1 = (PrevPos - Game1.currentTouchState[0].Position.Y > 10);
+           
+        if (
+             (!Game1.currentKeyboardState.IsKeyDown(Keys.Up)/*|| Game1.previousKeyboardState.IsKeyDown(Keys.Up)*/)
+             && (!Game1.currentKeyboardState.IsKeyDown(Keys.W)/* || Game1.previousKeyboardState.IsKeyDown(Keys.W)*/)
+             && (/*Game1.currentTouchState[0].Position.Y < Game1.previousTouchState[0].Position.Y*/!flag1)
+             )
       {
-        GamePadButtons buttons = Game1.currentGamePad.Buttons;
+        GamePadButtons buttons = Game1.currentGamePadState.Buttons;
         if (buttons.A == ButtonState.Pressed)
         {
-          buttons = Game1.previousGamePad.Buttons;
+          buttons = Game1.previousGamePadState.Buttons;
           if (buttons.A != ButtonState.Released)
             goto label_23;
         }
         else
           goto label_23;
       }
+
       if (Player.isTouchingTheGround)
       {
         if (Player.currentAnimation != Player.AnimationTypes.die 
@@ -221,20 +266,67 @@ namespace GameManager
 
         Player.jumpSpeed.Y = Player.initialJumpSpeed.Y;
         SoundEffects.PlayerJump.Play();
-        if (!Game1.currentKeyboard.IsKeyDown(Keys.Right) && !Game1.currentKeyboard.IsKeyDown(Keys.D))
+
+
+            bool flag2 = false;
+            float PrevPos2 = 0;
+
+            try
+            {
+                    if (Game1.currentTouchState.Count > 0)
+                        PrevPos2 = Game1.previousTouchState[0].Position.X;
+            }
+            catch
+            {
+                    Game1.previousTouchState = Game1.currentTouchState;
+            }
+
+            
+            if (Game1.currentTouchState.Count > 0)
+                flag2 = (Game1.currentTouchState[0].Position.X - PrevPos2 > 1);  
+
+
+
+            if (
+            ( !Game1.currentKeyboardState.IsKeyDown(Keys.Right) 
+            && !Game1.currentKeyboardState.IsKeyDown(Keys.D))
+            && (/*Game1.currentTouchState[0].Position.X > Game1.previousTouchState[0].Position.X*/!flag2)
+           )
         {
-          GamePadDPad dpad = Game1.currentGamePad.DPad;
+          GamePadDPad dpad = Game1.currentGamePadState.DPad;
           if (dpad.Right != ButtonState.Pressed)
           {
-            GamePadThumbSticks thumbSticks = Game1.currentGamePad.ThumbSticks;
+            GamePadThumbSticks thumbSticks = Game1.currentGamePadState.ThumbSticks;
+
+            bool flag3 = false;
+            float PrevPos3 = 0;
+
+            try
+            {
+                if (Game1.currentTouchState.Count > 0)
+                    PrevPos3 = Game1.previousTouchState[0].Position.X;
+            }
+            catch
+            {
+                Game1.previousTouchState = Game1.currentTouchState;
+            }
+
+            if (Game1.currentTouchState.Count > 0)
+               flag3 = (PrevPos3 - Game1.currentTouchState[0].Position.X > 1);
+           
+
             if ((double) thumbSticks.Left.X <= 0.800000011920929)
             {
-              if (!Game1.currentKeyboard.IsKeyDown(Keys.Left) && !Game1.currentKeyboard.IsKeyDown(Keys.A))
+              if (
+                     (!Game1.currentKeyboardState.IsKeyDown(Keys.Left) 
+                     && !Game1.currentKeyboardState.IsKeyDown(Keys.A))
+                     && (/*Game1.currentTouchState[0].Position.X < Game1.previousTouchState[0].Position.X*/!flag3)
+                 )
               {
-                dpad = Game1.currentGamePad.DPad;
+                dpad = Game1.currentGamePadState.DPad;
                 if (dpad.Left != ButtonState.Pressed)
                 {
-                  thumbSticks = Game1.currentGamePad.ThumbSticks;
+                  thumbSticks = Game1.currentGamePadState.ThumbSticks;
                   if ((double) thumbSticks.Left.X >= -0.800000011920929)
                     goto label_14;
                 }
@@ -278,12 +370,35 @@ label_14:
 label_23:
       GamePadDPad dpad1;
       GamePadThumbSticks thumbSticks1;
-      if (!Game1.currentKeyboard.IsKeyDown(Keys.Right) && !Game1.currentKeyboard.IsKeyDown(Keys.D))
+
+        bool flag4 = false;
+        float PrevPos4 = 0;
+
+        try
+        { 
+          if (Game1.previousTouchState.Count > 0)
+                PrevPos4 = Game1.previousTouchState[0].Position.X;
+        }
+        catch
+        {
+                Game1.previousTouchState = Game1.currentTouchState;
+        }
+
+        if (Game1.currentTouchState.Count > 0)
+          flag4 = (Game1.currentTouchState[0].Position.X - PrevPos4 > 1);
+           
+
+      if 
+      (
+          (!Game1.currentKeyboardState.IsKeyDown(Keys.Right) 
+          && !Game1.currentKeyboardState.IsKeyDown(Keys.D))
+          && (/*Game1.currentTouchState[0].Position.X > Game1.previousTouchState[0].Position.X*/!flag4)
+      )
       {
-        dpad1 = Game1.currentGamePad.DPad;
+        dpad1 = Game1.currentGamePadState.DPad;
         if (dpad1.Right != ButtonState.Pressed)
         {
-          thumbSticks1 = Game1.currentGamePad.ThumbSticks;
+          thumbSticks1 = Game1.currentGamePadState.ThumbSticks;
           if ((double) thumbSticks1.Left.X <= 0.800000011920929)
             goto label_28;
         }
@@ -294,12 +409,35 @@ label_23:
                 && Player.currentAnimation != Player.AnimationTypes.attack && Player.isTouchingTheGround )
         Player.currentAnimation = Player.AnimationTypes.walk;
 label_28:
-      if (!Game1.currentKeyboard.IsKeyDown(Keys.Left) && !Game1.currentKeyboard.IsKeyDown(Keys.A))
+
+
+        bool flag5 = false;
+        float PrevPos5 = 0;
+
+        try
+        {
+                if (Game1.previousTouchState.Count > 0)
+                    PrevPos5 = Game1.previousTouchState[0].Position.X;
+        }
+        catch
+        {
+                Game1.previousTouchState = Game1.currentTouchState;
+        }
+
+        if (Game1.currentTouchState.Count > 0)
+          flag5 = (PrevPos5 - Game1.currentTouchState[0].Position.X > 1);
+       
+
+      if 
+      ( (!Game1.currentKeyboardState.IsKeyDown(Keys.Left) 
+        && !Game1.currentKeyboardState.IsKeyDown(Keys.A))
+        &&  (/*Game1.currentTouchState[0].Position.X < Game1.previousTouchState[0].Position.X*/!flag5)
+      )
       {
-        dpad1 = Game1.currentGamePad.DPad;
+        dpad1 = Game1.currentGamePadState.DPad;
         if (dpad1.Left != ButtonState.Pressed)
         {
-          thumbSticks1 = Game1.currentGamePad.ThumbSticks;
+          thumbSticks1 = Game1.currentGamePadState.ThumbSticks;
           if ((double) thumbSticks1.Left.X >= -0.800000011920929)
             goto label_33;
         }
@@ -328,10 +466,18 @@ label_33:
     private static void Move(float elapsedTime)
     {
       Vector2 vector2 = new Vector2();
-      int num1 = (int) MathHelper.Clamp(Player.position.Y / (float) Tile.tileSize, 0.0f, (float) (MapsManager.maps[(int) RoomsManager.CurrentRoom].roomHeightTiles - 1));
-      int num2 = (int) MathHelper.Clamp((float) ((double) Player.position.Y + (double) Player.height - 1.0 / 1000.0) / (float) Tile.tileSize, 0.0f, (float) (MapsManager.maps[(int) RoomsManager.CurrentRoom].roomHeightTiles - 1));
-      int index1 = (int) MathHelper.Clamp((Player.position.X - 1f) / (float) Tile.tileSize, 0.0f, (float) (MapsManager.maps[(int) RoomsManager.CurrentRoom].roomWidthTiles - 1));
-      int index2 = (int) MathHelper.Clamp((float) ((double) Player.position.X + 1.0 + (double) Player.width - 1.0 / 1000.0) / (float) Tile.tileSize, 0.0f, (float) (MapsManager.maps[(int) RoomsManager.CurrentRoom].roomWidthTiles - 1));
+      int num1 = (int) MathHelper.Clamp(Player.position.Y / (float) Tile.tileSize, 0.0f, 
+          (float) (MapsManager.maps[(int) RoomsManager.CurrentRoom].roomHeightTiles - 1));
+
+      int num2 = (int) MathHelper.Clamp((float) ((double) Player.position.Y +
+          (double) Player.height - 1.0 / 1000.0) / (float) Tile.tileSize, 0.0f, 
+          (float) (MapsManager.maps[(int) RoomsManager.CurrentRoom].roomHeightTiles - 1));
+      int index1 = (int) MathHelper.Clamp((Player.position.X - 1f) / (float) Tile.tileSize,
+          0.0f, (float) (MapsManager.maps[(int) RoomsManager.CurrentRoom].roomWidthTiles - 1));
+
+      int index2 = (int) MathHelper.Clamp((float) ((double) Player.position.X + 1.0 
+          + (double) Player.width - 1.0 / 1000.0) / (float) Tile.tileSize, 0.0f, 
+          (float) (MapsManager.maps[(int) RoomsManager.CurrentRoom].roomWidthTiles - 1));
       if (Player.isOnTheWall)
       {
         Player.isOnTheWall = false;
@@ -353,8 +499,7 @@ label_33:
         }
       }
 
-      //RnD: Experimental
-      if (true)//(Player.isWallJumping)
+      if (Player.isWallJumping)
       {
         if ((double) Math.Abs(Player.jumpSpeed.X) > (double) Player.maxHorizontalMovementSpeed)
           vector2.X = Player.jumpSpeed.X;
@@ -396,6 +541,7 @@ label_33:
       }
       else
         vector2.X = Player.horizontalMovementSpeed;
+
       Player.horizontalMovementSpeed = 0.0f;
       if ((double) vector2.X > 0.0)
         Player.isFacingRight = true;

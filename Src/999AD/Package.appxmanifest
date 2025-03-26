@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"  xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" IgnorableNamespaces="uap mp iot">
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" IgnorableNamespaces="uap mp iot">
   <Identity Name="ME.999AD1PreALpha" Publisher="CN=Admin" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="5e06569d-af21-4105-4a90-eb11c62e1424" PhonePublisherId="50600241-6565-4035-4674-201280359024" />
   <Properties>
@@ -21,19 +21,17 @@
         </uap:DefaultTile>
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="portrait" />
-          <uap:Rotation Preference="landscape" />
-          <uap:Rotation Preference="landscapeFlipped" />
         </uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <Capability Name="internetClientServer" />
     <uap:Capability Name="videosLibrary" />
     <uap:Capability Name="picturesLibrary" />
     <uap:Capability Name="musicLibrary" />
     <uap:Capability Name="removableStorage" />
-    <Capability Name="internetClientServer"/>
-    <iot:Capability Name="systemManagement"/>
+    <iot:Capability Name="systemManagement" />
   </Capabilities>
 </Package>

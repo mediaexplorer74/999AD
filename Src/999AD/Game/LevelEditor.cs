@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 
@@ -65,36 +66,38 @@ namespace GameManager
             }
             catch (IOException ex)
             {
-                this.message = "Save FAILED!\nAsk Ivan.";
+                Debug.WriteLine("[ex] Save FAILED: " + ex.Message);
+                this.message = "Save FAILED!";
             }
         }
 
     private Point TileFromPointerLocation(MouseState mouseState)
     {
-      int num1 = (mouseState.X / Game1.scale + Camera.Rectangle.X) / Tile.tileSize;
-      int num2 = (mouseState.Y / Game1.scale + Camera.Rectangle.Y) / Tile.tileSize;
+      int num1 = (int)((mouseState.X / Game1.scaleX + Camera.Rectangle.X) / Tile.tileSize);
+      int num2 = (int)((mouseState.Y / Game1.scaleY + Camera.Rectangle.Y) / Tile.tileSize);
       int max = MapsManager.maps[this.currentRoomNumber].roomWidthTiles - 1;
-      return new Point(MathHelper.Clamp(num1, 0, max), MathHelper.Clamp(num2, 0, MapsManager.maps[this.currentRoomNumber].roomHeightTiles - 1));
+      return new Point(MathHelper.Clamp(num1, 0, max), 
+          MathHelper.Clamp(num2, 0, MapsManager.maps[this.currentRoomNumber].roomHeightTiles - 1));
     }
 
     private bool getDirectionalInput()
     {
-      if (Game1.currentKeyboard.IsKeyDown(Keys.Up))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.Up))
       {
         this.userInputString = "U," + this.userInputString[2].ToString();
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.Down))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.Down))
       {
         this.userInputString = "D," + this.userInputString[2].ToString();
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.Left))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.Left))
       {
         this.userInputString = this.userInputString[0].ToString() + ",L";
         return true;
       }
-      if (!Game1.currentKeyboard.IsKeyDown(Keys.Right))
+      if (!Game1.currentKeyboardState.IsKeyDown(Keys.Right))
         return false;
       this.userInputString = this.userInputString[0].ToString() + ",R";
       return true;
@@ -102,52 +105,52 @@ namespace GameManager
 
     private bool GetIntInput()
     {
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad0) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad0))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad0) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad0))
       {
         this.userInputInt *= 10;
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad1) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad1))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad1) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad1))
       {
         this.userInputInt = this.userInputInt * 10 + 1;
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad2) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad2))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad2) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad2))
       {
         this.userInputInt = this.userInputInt * 10 + 2;
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad3) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad3))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad3) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad3))
       {
         this.userInputInt = this.userInputInt * 10 + 3;
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad4) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad4))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad4) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad4))
       {
         this.userInputInt = this.userInputInt * 10 + 4;
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad5) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad5))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad5) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad5))
       {
         this.userInputInt = this.userInputInt * 10 + 5;
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad6) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad6))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad6) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad6))
       {
         this.userInputInt = this.userInputInt * 10 + 6;
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad7) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad7))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad7) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad7))
       {
         this.userInputInt = this.userInputInt * 10 + 7;
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad8) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad8))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad8) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad8))
       {
         this.userInputInt = this.userInputInt * 10 + 8;
         return true;
       }
-      if (!Game1.currentKeyboard.IsKeyDown(Keys.NumPad9) || Game1.previousKeyboard.IsKeyDown(Keys.NumPad9))
+      if (!Game1.currentKeyboardState.IsKeyDown(Keys.NumPad9) || Game1.previousKeyboardState.IsKeyDown(Keys.NumPad9))
         return false;
       this.userInputInt = this.userInputInt * 10 + 9;
       return true;
@@ -155,57 +158,57 @@ namespace GameManager
 
     private bool GetStringInput()
     {
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad0) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad0))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad0) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad0))
       {
         this.userInputString += "0";
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad1) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad1))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad1) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad1))
       {
         this.userInputString += "1";
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad2) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad2))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad2) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad2))
       {
         this.userInputString += "2";
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad3) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad3))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad3) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad3))
       {
         this.userInputString += "3";
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad4) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad4))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad4) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad4))
       {
         this.userInputString += "4";
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad5) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad5))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad5) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad5))
       {
         this.userInputString += "5";
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad6) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad6))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad6) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad6))
       {
         this.userInputString += "6";
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad7) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad7))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad7) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad7))
       {
         this.userInputString += "7";
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad8) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad8))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad8) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad8))
       {
         this.userInputString += "8";
         return true;
       }
-      if (Game1.currentKeyboard.IsKeyDown(Keys.NumPad9) && !Game1.previousKeyboard.IsKeyDown(Keys.NumPad9))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.NumPad9) && !Game1.previousKeyboardState.IsKeyDown(Keys.NumPad9))
       {
         this.userInputString += "9";
         return true;
       }
-      if (!Game1.currentKeyboard.IsKeyDown(Keys.OemComma) || Game1.previousKeyboard.IsKeyDown(Keys.OemComma))
+      if (!Game1.currentKeyboardState.IsKeyDown(Keys.OemComma) || Game1.previousKeyboardState.IsKeyDown(Keys.OemComma))
         return false;
       this.userInputString += ",";
       return true;
@@ -220,77 +223,79 @@ namespace GameManager
       switch (this.menu)
       {
         case LevelEditor.MenuState.start:
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter))
+          if ((!Game1.currentKeyboardState.IsKeyDown(Keys.Enter))
+             && !(Game1.currentTouchState.Count == 2)
+             )
             break;
           this.menu = LevelEditor.MenuState.none;
           this.message = "";
           break;
         case LevelEditor.MenuState.none:
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.M))
+          if (!Game1.currentKeyboardState.IsKeyDown(Keys.M))
             break;
           this.menu = LevelEditor.MenuState.main;
           this.message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
           break;
         case LevelEditor.MenuState.main:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.R))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.R))
           {
             this.menu = LevelEditor.MenuState.rooms;
             this.message = "Press:\nA-Change room\nB-Change room size";
             break;
           }
-          if (Game1.currentKeyboard.IsKeyDown(Keys.T))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.T))
           {
             this.menu = LevelEditor.MenuState.tiles;
             this.message = "Press:\nA-Change tile type\nB-Random tile mode";
             break;
           }
-          if (Game1.currentKeyboard.IsKeyDown(Keys.V))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.V))
           {
             this.menu = LevelEditor.MenuState.view;
             this.message = "Press:\nA-Highlight solid tiles\nB-Highlight deadly tiles";
             break;
           }
-          if (Game1.currentKeyboard.IsKeyDown(Keys.S))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.S))
           {
             this.menu = LevelEditor.MenuState.none;
             this.message = "";
             this.saveMaps();
             break;
           }
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Back) || Game1.previousKeyboard.IsKeyDown(Keys.Back))
+          if (!Game1.currentKeyboardState.IsKeyDown(Keys.Back) || Game1.previousKeyboardState.IsKeyDown(Keys.Back))
             break;
           this.menu = LevelEditor.MenuState.none;
           this.message = "";
           break;
         case LevelEditor.MenuState.rooms:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.A))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.A))
           {
             this.menu = LevelEditor.MenuState.pickRoom;
             this.message = "Room index: ";
             this.userInputInt = 0;
             break;
           }
-          if (Game1.currentKeyboard.IsKeyDown(Keys.B))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.B))
           {
             this.menu = LevelEditor.MenuState.pickRoomSize;
             this.message = "Room size in tiles (format: width,height): ";
             this.userInputString = "";
             break;
           }
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Back) || Game1.previousKeyboard.IsKeyDown(Keys.Back))
+          if (!Game1.currentKeyboardState.IsKeyDown(Keys.Back) || Game1.previousKeyboardState.IsKeyDown(Keys.Back))
             break;
           this.menu = LevelEditor.MenuState.main;
           this.message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
           break;
         case LevelEditor.MenuState.tiles:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.A))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.A))
           {
             this.menu = LevelEditor.MenuState.pickTileIndex;
             this.message = "Tile index: ";
             this.userInputInt = 0;
             break;
           }
-          if (Game1.currentKeyboard.IsKeyDown(Keys.B))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.B))
           {
             this.menu = LevelEditor.MenuState.selectRandomTiles;
             this.message = "Enter the indexes of the tiles you want to\nrandomly select from (format: index1,index2...)\nYou can also click the tiles displayed on the right.\nIndexes: ";
@@ -298,33 +303,33 @@ namespace GameManager
             this.randomTiles.Clear();
             break;
           }
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Back) || Game1.previousKeyboard.IsKeyDown(Keys.Back))
+          if (!Game1.currentKeyboardState.IsKeyDown(Keys.Back) || Game1.previousKeyboardState.IsKeyDown(Keys.Back))
             break;
           this.menu = LevelEditor.MenuState.main;
           this.message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
           break;
         case LevelEditor.MenuState.view:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.A))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.A))
           {
             this.menu = LevelEditor.MenuState.none;
             this.message = "";
             this.solidView = !this.solidView;
             break;
           }
-          if (Game1.currentKeyboard.IsKeyDown(Keys.B))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.B))
           {
             this.menu = LevelEditor.MenuState.none;
             this.message = "";
             this.deadlyView = !this.deadlyView;
             break;
           }
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Back) || Game1.previousKeyboard.IsKeyDown(Keys.Back))
+          if (!Game1.currentKeyboardState.IsKeyDown(Keys.Back) || Game1.previousKeyboardState.IsKeyDown(Keys.Back))
             break;
           this.menu = LevelEditor.MenuState.main;
           this.message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
           break;
         case LevelEditor.MenuState.pickRoom:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.Back) && !Game1.previousKeyboard.IsKeyDown(Keys.Back))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.Back) && !Game1.previousKeyboardState.IsKeyDown(Keys.Back))
           {
             this.menu = LevelEditor.MenuState.main;
             this.message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
@@ -335,7 +340,9 @@ namespace GameManager
             this.message = "Room index: " + this.userInputInt.ToString();
             break;
           }
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter))
+          if ((!Game1.currentKeyboardState.IsKeyDown(Keys.Enter))
+             && !(Game1.currentTouchState.Count == 2)
+             )
             break;
           this.currentRoomNumber = this.userInputInt < 18 ? this.userInputInt : 17;
           CameraManager.SwitchCamera((RoomsManager.Rooms) this.currentRoomNumber, 0.0f);
@@ -345,7 +352,7 @@ namespace GameManager
           this.message = "";
           break;
         case LevelEditor.MenuState.pickRoomSize:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.Back) && !Game1.previousKeyboard.IsKeyDown(Keys.Back))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.Back) && !Game1.previousKeyboardState.IsKeyDown(Keys.Back))
           {
             this.menu = LevelEditor.MenuState.main;
             this.message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
@@ -356,7 +363,9 @@ namespace GameManager
             this.message = "Room size in tiles (format: width,height): " + this.userInputString;
             break;
           }
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter))
+          if ((!Game1.currentKeyboardState.IsKeyDown(Keys.Enter))
+                        && !(Game1.currentTouchState.Count == 2)
+             )
             break;
           string[] strArray1 = this.userInputString.Split(new char[1]
           {
@@ -373,7 +382,7 @@ namespace GameManager
           this.message = "Use the arrows to select\nthe edges (top/bottom and left/right)\nto shift to resize the room.\n" + this.userInputString;
           break;
         case LevelEditor.MenuState.pickResizingDirection:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.Back) && !Game1.previousKeyboard.IsKeyDown(Keys.Back))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.Back) && !Game1.previousKeyboardState.IsKeyDown(Keys.Back))
           {
             this.menu = LevelEditor.MenuState.main;
             this.message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
@@ -387,8 +396,11 @@ namespace GameManager
             this.message = "Use the arrows to select\nthe edges (top/bottom and left/right)\nto shift to resize the room.\n" + this.userInputString;
             break;
           }
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter) || Game1.previousKeyboard.IsKeyDown(Keys.Enter))
+          if ((!Game1.currentKeyboardState.IsKeyDown(Keys.Enter) || Game1.previousKeyboardState.IsKeyDown(Keys.Enter))
+             && !(Game1.currentTouchState.Count == 2 /*&& Game1.previousTouchState.Count != 3*/))
             break;
+
+
           RoomMap roomMap = new RoomMap(this.heightTiles, this.widthTiles);
           int roomHeightTiles = MapsManager.maps[this.currentRoomNumber].roomHeightTiles;
           int roomWidthTiles = MapsManager.maps[this.currentRoomNumber].roomWidthTiles;
@@ -415,7 +427,7 @@ namespace GameManager
           this.widthTiles = 0;
           break;
         case LevelEditor.MenuState.pickTileIndex:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.Back) && !Game1.previousKeyboard.IsKeyDown(Keys.Back))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.Back) && !Game1.previousKeyboardState.IsKeyDown(Keys.Back))
           {
             this.menu = LevelEditor.MenuState.main;
             this.message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
@@ -426,8 +438,12 @@ namespace GameManager
             this.message = "Tile index: " + this.userInputInt.ToString();
             break;
           }
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter))
+
+          if ( (!Game1.currentKeyboardState.IsKeyDown(Keys.Enter))
+                        && !(Game1.currentTouchState.Count == 2)
+                            )
             break;
+
           this.currentTileType = this.userInputInt < 68 ? this.userInputInt : 67;
           this.userInputInt = 0;
           this.menu = LevelEditor.MenuState.none;
@@ -436,7 +452,7 @@ namespace GameManager
           this.PreviousTileHovered = new Point(-1, -1);
           break;
         case LevelEditor.MenuState.selectRandomTiles:
-          if (Game1.currentKeyboard.IsKeyDown(Keys.Back) && !Game1.previousKeyboard.IsKeyDown(Keys.Back))
+          if (Game1.currentKeyboardState.IsKeyDown(Keys.Back) && !Game1.previousKeyboardState.IsKeyDown(Keys.Back))
           {
             this.menu = LevelEditor.MenuState.main;
             this.message = "Main Menu (backspace to exit). Press:\nR-Room Options\nT-Tile options\nV-View options\nS-Save maps";
@@ -447,13 +463,22 @@ namespace GameManager
             this.message = "Enter the indexes of the tiles you want to\nrandomly select from (format: index1,index2...)\nYou can also click the tiles displayed on the right.\nIndexes: " + this.userInputString;
             break;
           }
-          if (mouseState.X >= Game1.gameWidth * Game1.scale && mouseState.X < Game1.viewportRectangle.Width && mouseState.Y >= 0 && mouseState.Y < Game1.viewportRectangle.Height && mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed)
+          if (mouseState.X >= Game1.gameWidth * Game1.scaleX 
+                        && mouseState.X < Game1.viewportRectangle.Width 
+                        && mouseState.Y >= 0 && mouseState.Y < Game1.viewportRectangle.Height 
+                        && mouseState.LeftButton == ButtonState.Pressed 
+                        && previousMouseState.LeftButton != ButtonState.Pressed)
           {
-            this.userInputString = this.userInputString + "," + ((mouseState.X - Game1.gameWidth * Game1.scale) / (Tile.tileSize * Game1.scale) + mouseState.Y / (Tile.tileSize * Game1.scale) * tilesPerRow).ToString() + ",";
+            this.userInputString = this.userInputString + 
+                            "," + ((mouseState.X - Game1.gameWidth * Game1.scaleX) 
+                            / (Tile.tileSize * Game1.scaleY) + mouseState.Y / 
+                            (Tile.tileSize * Game1.scaleY) * tilesPerRow).ToString() + ",";
             this.message = "Enter the indexes of the tiles you want to\nrandomly select from (format: index1,index2...)\nYou can also click the tiles displayed on the right.\nIndexes: " + this.userInputString;
             break;
           }
-          if (!Game1.currentKeyboard.IsKeyDown(Keys.Enter))
+          if ((!Game1.currentKeyboardState.IsKeyDown(Keys.Enter))
+                        && !(Game1.currentTouchState.Count == 2)
+             )
             break;
           this.randomTiles.Clear();
           string[] strArray2 = this.userInputString.Split(new char[1]
@@ -494,18 +519,19 @@ namespace GameManager
       this.MenuLoop(mouseState, previousMouseState, tilesPerRow, infoBoxHeighPx);
       if (this.menu != LevelEditor.MenuState.none)
         return;
-      if (Game1.currentKeyboard.IsKeyDown(Keys.Up))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.Up))
         CameraManager.pointLocked.Y -= 10f;
-      if (Game1.currentKeyboard.IsKeyDown(Keys.Down))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.Down))
         CameraManager.pointLocked.Y += 10f;
-      if (Game1.currentKeyboard.IsKeyDown(Keys.Right))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.Right))
         CameraManager.pointLocked.X += 10f;
-      if (Game1.currentKeyboard.IsKeyDown(Keys.Left))
+      if (Game1.currentKeyboardState.IsKeyDown(Keys.Left))
         CameraManager.pointLocked.X -= 10f;
       CameraManager.pointLocked.X = MathHelper.Clamp(CameraManager.pointLocked.X, (float) Game1.gameWidth / 2f, (float) MapsManager.maps[this.currentRoomNumber].RoomWidthtPx - (float) Game1.gameWidth / 2f);
       CameraManager.pointLocked.Y = MathHelper.Clamp(CameraManager.pointLocked.Y, (float) Game1.gameHeight / 2f, (float) MapsManager.maps[this.currentRoomNumber].RoomHeightPx - (float) Game1.gameHeight / 2f);
       Tile.TileType tileType;
-      if (mouseState.X >= 0 && mouseState.X < Game1.gameWidth * Game1.scale && mouseState.Y >= 0 && mouseState.Y < Game1.gameHeight * Game1.scale)
+      if (mouseState.X >= 0 && mouseState.X < Game1.gameWidth * Game1.scaleX
+                && mouseState.Y >= 0 && mouseState.Y < Game1.gameHeight * Game1.scaleY)
       {
         Point point = this.TileFromPointerLocation(mouseState);
         this.hoveredTileType = (int) MapsManager.maps[this.currentRoomNumber].array[point.Y, point.X].tileType;
@@ -542,9 +568,12 @@ namespace GameManager
         strArray[8] = ")";
         this.tilePositionInfo = string.Concat(strArray);
       }
-      else if (mouseState.X >= Game1.gameWidth * Game1.scale && mouseState.X < Game1.viewportRectangle.Width && mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed)
+      else if (mouseState.X >= Game1.gameWidth * Game1.scaleX
+                && mouseState.X < Game1.viewportRectangle.Width 
+                && mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton != ButtonState.Pressed)
       {
-        int num = (mouseState.X - Game1.gameWidth * Game1.scale) / (Tile.tileSize * Game1.scale) + mouseState.Y / (Tile.tileSize * Game1.scale) * tilesPerRow;
+        int num = (int)((mouseState.X - Game1.gameWidth * Game1.scaleX) / (Tile.tileSize * Game1.scaleX) 
+                    + mouseState.Y / (Tile.tileSize * Game1.scaleY) * tilesPerRow);
         if (num < 68)
         {
           this.randomMode = false;
@@ -667,13 +696,34 @@ namespace GameManager
       }
       else
       {
-        spriteBatch.DrawString(this.arial14, this.tileTypeInfo, new Vector2((float) (Game1.gameWidth * Game1.scale / 2), (float) (Game1.gameHeight * Game1.scale + infoBoxHeightPx * Game1.scale / 2)) - this.arial14.MeasureString(this.tileTypeInfo) / 2f, Color.Black);
-        spriteBatch.DrawString(this.arial14, this.tilePositionInfo, new Vector2((float) (Game1.gameWidth * Game1.scale - 10) - this.arial14.MeasureString(this.tilePositionInfo).X, (float) (Game1.gameHeight * Game1.scale + infoBoxHeightPx * Game1.scale / 2) - this.arial14.MeasureString(this.tilePositionInfo).Y / 2f), Color.Black);
-        spriteBatch.DrawString(this.arial14, this.roomInfo, new Vector2(10f, (float) (Game1.gameHeight * Game1.scale + infoBoxHeightPx * Game1.scale / 2) - this.arial14.MeasureString(this.roomInfo).Y / 2f), Color.Black);
+        spriteBatch.DrawString(this.arial14, this.tileTypeInfo, 
+            new Vector2((float) (Game1.gameWidth * Game1.scaleX / 2), 
+            (float) (Game1.gameHeight * Game1.scaleY + infoBoxHeightPx * Game1.scaleY / 2)) 
+            - this.arial14.MeasureString(this.tileTypeInfo) / 2f, Color.Black);
+
+        spriteBatch.DrawString(this.arial14, this.tilePositionInfo, 
+            new Vector2((float) (Game1.gameWidth * Game1.scaleX - 10) 
+            - this.arial14.MeasureString(this.tilePositionInfo).X, 
+            (float) (Game1.gameHeight * Game1.scaleY + infoBoxHeightPx * Game1.scaleY / 2) 
+            - this.arial14.MeasureString(this.tilePositionInfo).Y / 2f), Color.Black);
+
+        spriteBatch.DrawString(this.arial14, this.roomInfo, 
+            new Vector2(10f, (float) (Game1.gameHeight * Game1.scaleY + infoBoxHeightPx * Game1.scaleY / 2) 
+            - this.arial14.MeasureString(this.roomInfo).Y / 2f), Color.Black);
+
         if (this.menu == LevelEditor.MenuState.start || this.menu == LevelEditor.MenuState.none)
           return;
-        spriteBatch.Draw(this.whiteTexture, new Rectangle((int) ((double) (Game1.viewportRectangle.Width / 2) - (double) this.arial32.MeasureString(this.message).X / 2.0 - 10.0), (int) ((double) (Game1.viewportRectangle.Height / 2) - (double) this.arial32.MeasureString(this.message).Y / 2.0 - 10.0), (int) this.arial32.MeasureString(this.message).X + 20, (int) this.arial32.MeasureString(this.message).Y + 20), Color.LightGray);
-        spriteBatch.DrawString(this.arial32, this.message, new Vector2((float) (Game1.viewportRectangle.Width / 2), (float) (Game1.viewportRectangle.Height / 2)) - this.arial32.MeasureString(this.message) / 2f, Color.Black);
+
+        spriteBatch.Draw(this.whiteTexture, new Rectangle((int) ((double) (Game1.viewportRectangle.Width / 2) 
+            - (double) this.arial32.MeasureString(this.message).X / 2.0 - 10.0), 
+            (int) ((double) (Game1.viewportRectangle.Height / 2) 
+            - (double) this.arial32.MeasureString(this.message).Y / 2.0 - 10.0), 
+            (int) this.arial32.MeasureString(this.message).X + 20,
+            (int) this.arial32.MeasureString(this.message).Y + 20), Color.LightGray);
+
+        spriteBatch.DrawString(this.arial32, this.message, 
+            new Vector2((float) (Game1.viewportRectangle.Width / 2), 
+            (float) (Game1.viewportRectangle.Height / 2)) - this.arial32.MeasureString(this.message) / 2f, Color.Black);
       }
     }
 

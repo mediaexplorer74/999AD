@@ -169,17 +169,14 @@ namespace GameManager
         return;
       float num2 = MathHelper.Lerp(3f, 0.0f, CollectablesManager.elapsedAnimationTime / CollectablesManager.animationTime);
       
-      //RnD
-      Rectangle rectangle1 = new Rectangle();
-      //ref Rectangle r = ref rectangle1;
-      Rectangle rectangle2 = Camera.Rectangle;
-      int x1 = (int) ((double) MathHelper.Lerp((float) rectangle2.Center.X, CollectablesManager.targetPoints[0].X, CollectablesManager.elapsedAnimationTime / CollectablesManager.animationTime) - (double) CollectablesManager.itemsBeingUsed[0].rectangle.Width * (double) num2 / 2.0);
-      rectangle2 = Camera.Rectangle;
-      int y2 = (int) ((double) MathHelper.Lerp((float) rectangle2.Center.Y, CollectablesManager.targetPoints[0].Y, CollectablesManager.elapsedAnimationTime / CollectablesManager.animationTime) - (double) CollectablesManager.itemsBeingUsed[0].rectangle.Height * (double) num2 / 2.0);
+      Rectangle rectangle1 = Camera.Rectangle;
+      int x1 = (int) ((double) MathHelper.Lerp((float) rectangle1.Center.X, CollectablesManager.targetPoints[0].X, CollectablesManager.elapsedAnimationTime / CollectablesManager.animationTime) - (double) CollectablesManager.itemsBeingUsed[0].rectangle.Width * (double) num2 / 2.0);
+      rectangle1 = Camera.Rectangle;
+      int y2 = (int) ((double) MathHelper.Lerp((float) rectangle1.Center.Y, CollectablesManager.targetPoints[0].Y, CollectablesManager.elapsedAnimationTime / CollectablesManager.animationTime) - (double) CollectablesManager.itemsBeingUsed[0].rectangle.Height * (double) num2 / 2.0);
       int width = (int) ((double) CollectablesManager.itemsBeingUsed[0].rectangle.Width * (double) num2);
       int height = (int) ((double) CollectablesManager.itemsBeingUsed[0].rectangle.Height * (double) num2);
-      Rectangle r = new Rectangle(x1, y2, width, height);
-      CollectablesManager.itemsBeingUsed[0].Draw(spriteBatch, /*rectangle1*/r);
+      Rectangle rectangle2 = new Rectangle(x1, y2, width, height);
+      CollectablesManager.itemsBeingUsed[0].Draw(spriteBatch, rectangle2);
     }
   }
 }
