@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" IgnorableNamespaces="uap mp iot">
-  <Identity Name="ME.999AD1PreALpha" Publisher="CN=Admin" Version="1.0.0.0" />
+  <Identity Name="ME.999AD1p0p1a" Publisher="CN=Admin" Version="1.0.1.0" />
   <mp:PhoneIdentity PhoneProductId="5e06569d-af21-4105-4a90-eb11c62e1424" PhonePublisherId="50600241-6565-4035-4674-201280359024" />
   <Properties>
-    <DisplayName>999AD v1.0a</DisplayName>
+    <DisplayName>999AD v1.0.1a</DisplayName>
     <PublisherDisplayName>mediaexplorer</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="GameManager.App">
-      <uap:VisualElements DisplayName="999AD 1.0a" Square150x150Logo="Assets\Logo.png" Square44x44Logo="Assets\SmallLogo.png" Description="999AD UWP platformer game" BackgroundColor="#464646">
+      <uap:VisualElements DisplayName="999AD 1.0.1a" Square150x150Logo="Assets\Logo.png" Square44x44Logo="Assets\SmallLogo.png" Description="999AD UWP platformer game" BackgroundColor="#464646">
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:DefaultTile Square71x71Logo="Assets\SmallTile.png" Wide310x150Logo="Assets\WideTile.png" Square310x310Logo="Assets\LargeTile.png">
         </uap:DefaultTile>

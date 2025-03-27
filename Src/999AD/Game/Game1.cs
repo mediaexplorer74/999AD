@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Media;
+using System;
 
 
 namespace GameManager
@@ -22,63 +23,63 @@ namespace GameManager
     public static readonly int minViewportHeight = 216;
     public static int gameWidth;
     public static int gameHeight;
-    //public static bool IsTouchPanelExist = true; // start accept
     public static Rectangle viewportRectangle;
     private static RenderTarget2D nativeRenderTarget;
     private static RenderTarget2D renderTarget_zoom1;
     private static RenderTarget2D renderTarger_zoom0dot5;
-    public static float scaleX;
-    public static float scaleY;
-
+    public static double scaleX;
+    public static double scaleY;
     public static MouseState currentMouseState;
     public static MouseState previousMouseState;
-
     public static TouchCollection currentTouchState;
     public static TouchCollection previousTouchState;
-
     public static KeyboardState previousKeyboardState;
     public static KeyboardState currentKeyboardState;
-
     public static GamePadState previousGamePadState;
     public static GamePadState currentGamePadState;
-
     public static Game1.GameStates currentGameState;
     private bool gameInitialized;
   
     public static Texture2D white;
 
     public Game1()
-    {
-      
+    {      
       this.graphics = new GraphicsDeviceManager((Game) this);
-
-      this.graphics.GraphicsProfile = GraphicsProfile.Reach; // Experimental
-
+      this.graphics.GraphicsProfile = GraphicsProfile.Reach;
       this.Content.RootDirectory = "Content";
     }
 
     protected override void Initialize()
     {
+      this.graphics.IsFullScreen = true;//true; // set it *true* for W10M 
       this.IsMouseVisible = true;
 
-         Game1.gameWidth = Game1.minViewportWidth;
-         Game1.gameHeight = Game1.minViewportHeight;
+      Game1.gameWidth = Game1.minViewportWidth;
+      Game1.gameHeight = Game1.minViewportHeight;
 
-            //this.graphics.PreferredBackBufferWidth = 640; // Experimental
+      Game1.scaleX = (1f * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / Game1.gameWidth);
+      Game1.scaleY = (1f * GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / Game1.gameHeight);
 
-            /*Game1.scale = MathHelper.Min(
-                  GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / Game1.gameWidth,
-                  GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / Game1.gameHeight);*/
+      double scale = MathHelper.Min((float)Game1.scaleX, (float)Game1.scaleY);
 
-            Game1.scaleX = //2;
-                GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / Game1.gameWidth;
+      // RnD: my very fast & stupid "scale problem solve/solving" =)
+      // Is your screen in portrait mode?
+      if (Math.Abs(Game1.scaleX - Game1.scaleY) > 2)
+      {
+          // yea, "W10M" screen mode ;)
+          Game1.scaleX = scale;
+          Game1.scaleY = scale * 1.9f;
+      }
+      else
+      {
+          // no, "Desktop-PC/notebook" (Win11) screen mode ;)
+          Game1.scaleX = scale;
+          Game1.scaleY = scale * 0.9f;
+                
+          this.graphics.IsFullScreen = false; // set it *false* for "big-screen" devices 
+      }
 
-            Game1.scaleY = //4;
-                GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / Game1.gameHeight;
-
-
-
-            Game1.renderTarget_zoom1 = new RenderTarget2D(this.GraphicsDevice, Game1.gameWidth, Game1.gameHeight);
+      Game1.renderTarget_zoom1 = new RenderTarget2D(this.GraphicsDevice, Game1.gameWidth, Game1.gameHeight);
       Game1.renderTarger_zoom0dot5 = new RenderTarget2D(this.GraphicsDevice, Game1.gameWidth * 2, Game1.gameHeight * 2);
 
       Game1.viewportRectangle = new Rectangle(
@@ -88,20 +89,19 @@ namespace GameManager
           (int)(Game1.gameHeight * Game1.scaleY)
           );
 
-      this.graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            //this.GraphicsDevice.DisplayMode.Width;
+      this.graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;      
 
-      this.graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //this.GraphicsDevice.DisplayMode.Height;
+      this.graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;     
 
-      this.graphics.IsFullScreen = true;//true; // set it *true* for W10M 
+      //this.graphics.IsFullScreen = true;//true; // set it *true* for W10M 
       this.graphics.ApplyChanges();
       
       Game1.previousKeyboardState = Keyboard.GetState();
       Game1.previousGamePadState = GamePad.GetState(PlayerIndex.One);
 
-      //Game1.previousMouseState = Mouse.GetState();
-       Game1.previousTouchState = TouchPanel.GetState();
+      Game1.previousMouseState = Mouse.GetState();
+      Game1.previousTouchState = TouchPanel.GetState();
+      
       base.Initialize();
     }
 
